@@ -11,6 +11,8 @@ const routes = () => {
     router.post("/register",UserController.registerUser)
     router.post('/forgetpassword',UserController.forgetPassword)
     router.post('/resetpassword',verifyJwt,UserController.resetPassword)
+    router.post('/auth',verifyJwt,UserController.authUser)
+    router.post('/user/:id',verifyJwt,UserController.updateProfile)
     return router;
 }
 

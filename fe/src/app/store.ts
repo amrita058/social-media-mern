@@ -5,6 +5,7 @@ export const store = configureStore({
     reducer:{
         auth:allSlice.auth,
         theme:allSlice.theme,
-        drop:allSlice.drop
+        drop:allSlice.drop,
+        user:allSlice.user
     }
 })

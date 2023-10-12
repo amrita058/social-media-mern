@@ -43,3 +43,24 @@ export const resetPassword = async (req:Request,res:Response)=>{
         res.status(500).json(e)
     }
 }
+
+export const authUser = async (req:Request,res:Response)=>{
+    try{
+        console.log("at auth user",req.user)
+        res.status(201).json(await UserService.authUser(req.user))
+    }
+    catch(e){
+        res.status(500).json(e)
+    }
+}
+
+
+export const updateProfile = async (req:Request,res:Response)=>{
+    try{
+        console.log("update profile controller",req.params)
+        res.status(201).json(await UserService.updateProfile(req.body,req.params))
+    }
+    catch(e){
+        res.status(500).json(e)
+    }
+}

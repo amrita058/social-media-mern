@@ -32,7 +32,7 @@ export const themeSlice = createSlice({
 })
 
 //DROPDOWN FOR APP
-const initialDrop = {value:true}
+const initialDrop = {value:false}
 export const dropSlice = createSlice({
     name:"drop",
     initialState:initialDrop,
@@ -44,8 +44,24 @@ export const dropSlice = createSlice({
     }
 })
 
+//LOGGED IN USER INFO
+const initialUser = {_id:'',userName:'',email:'',fullName:''}
+export const userInfoSlice = createSlice({
+    name:"user",
+    initialState:initialUser,
+    reducers:{
+        changeUser:(state,action)=>{
+            // console.log("action here",action.payload)
+            state =  {...state,...action.payload}
+            // console.log("state here",state)
+            return state
+        }
+    }
+})
+
 export const {showAuthenticate,authenticate,unauthenticate} = authSlice.actions
 export const {changeTheme} = themeSlice.actions
 export const {changeDrop} = dropSlice.actions
+export const {changeUser} = userInfoSlice.actions
 
-export default {auth:authSlice.reducer,theme:themeSlice.reducer,drop:dropSlice.reducer}
+export default {auth:authSlice.reducer,theme:themeSlice.reducer,drop:dropSlice.reducer,user:userInfoSlice.reducer}

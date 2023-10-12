@@ -6,7 +6,8 @@ import { UserLoginSchema, UserRegisterSchema } from "../../types"
 import { env } from "../../config"
 const User = require("../Models/index")
 import { CustomError } from "../../libs";
-import e from "express";
+import { ObjectId } from "mongodb";
+import { error } from "console";
 
 type loginParams = z.infer<typeof UserLoginSchema>
 type registerParams = z.infer<typeof UserRegisterSchema>
@@ -102,3 +103,43 @@ export const resetPassword= async(user:Partial<loginParams>,decoded:any)=>{
     }
 }
 
+export const authUser = async (decoded:any)=>{
+    try{
+        const checkUser = await User.findOne({_id:decoded._id}).select('-password')
+        // const {_id,userName,email,fullName} = decoded
+        // const userInfo = {
+        //     _id:_id,
+        //     userName:userName,
+        //     email:email,
+        //     fullName:fullName,
+        // }
+        console.log(checkUser)
+        return checkUser
+    }
+    catch(e){
+        return e
+    }
+}
+
+export const updateProfile = async(user:Partial<registerParams>,id:any)=>{
+    try{
+        console.log("st repo0",id)
+        const checkUser = await User.findOne({"_id":new ObjectId(id)})
+        console.log(checkUser)
+        const _id = new ObjectId(id)
+        const updateUser = await User.updateOne({"_id":_id},{ $set: { url:user.url } },{new:true})
+        // .then(() => {
+        //     console.log('Documents updated successfully.');
+        //   })
+        //   .catch((error:any) => {
+        //     console.error('Error updating documents:', error);
+        //     throw error
+        //   })
+        console.log(checkUser,updateUser,user.url)
+        return "Profile successfully updated"
+    }
+    catch(e){
+        console.log(error)
+        return e
+    }
+}

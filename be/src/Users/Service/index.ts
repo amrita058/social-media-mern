@@ -119,3 +119,22 @@ export const resetPassword = (user:Partial<loginParams>,decoded:any)=>{
         throw e
     }
 }
+
+export const authUser = async(decoded:any)=>{
+    try{
+        const user = await UserRepository.authUser(decoded)
+        return user
+    }
+    catch(e){
+        return e
+    }
+}
+
+export const updateProfile = (user:Partial<registerParams>,id:any)=>{
+    try{
+        return UserRepository.updateProfile(user,id)
+    }
+    catch(e){
+        throw e
+    }
+}

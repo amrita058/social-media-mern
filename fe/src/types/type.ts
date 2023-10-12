@@ -14,9 +14,10 @@ export const UserRegisterSchema = z.object({
     password: z.string().min(8,{message:"Must be at least 8 characters"})
                 .regex(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]+$/, {
                     message: 'Must contain at least one uppercase, one lowercase, one number, and one special character'}),
+    url: z.string().optional()
 })
 
-export const ForgetPasswordSchema  =z.object({
+export const ForgetPasswordSchema  = z.object({
     email:z.string().email("Please enter valid email")
 })
 

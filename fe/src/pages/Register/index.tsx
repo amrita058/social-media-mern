@@ -1,9 +1,10 @@
-import {Link} from 'react-router-dom'
+import {Link, useNavigate} from 'react-router-dom'
 import { useForm, SubmitHandler } from "react-hook-form";
 import axios from "axios";
 import {z} from "zod"
 import { zodResolver } from '@hookform/resolvers/zod';
 import {useSelector,useDispatch} from 'react-redux'
+import { toast } from "react-toastify";
 import { UserRegisterSchema } from '../../types/type';
 import img from '../../assets/download.png'
 import { changeTheme } from "../../features/slice";
@@ -11,6 +12,7 @@ import { changeTheme } from "../../features/slice";
 
 const Register: React.FC = () => {
   const dispatch = useDispatch()
+  const navigate = useNavigate()
   type RegisterParams =  z.infer<typeof UserRegisterSchema>
 
   const theme = useSelector((state:any)=>{
@@ -28,8 +30,10 @@ const Register: React.FC = () => {
 
   const onSubmit: SubmitHandler<RegisterParams> = async (data:RegisterParams) => {
     await axios.post("http://localhost:7000/api/register",data)
-    .then(res=>{console.log(res.data.token)
-      localStorage.setItem("token",res.data.token)
+    .then(res=>{
+      console.log(res.data)
+      toast.success("Login Successful",{theme:theme?'dark':'light'})
+      navigate('/login')
       reset();
     })
     .catch(error=>{

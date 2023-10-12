@@ -6,6 +6,6 @@ export const errorHandler = (err:Error,req:Request,res:Response,next:NextFunctio
         res.status(err.status?err.status:500).json(err)
     }
     else{
-        res.status(500).json("Server error")
+        res.status(500).json("Server errors")
     }
 }

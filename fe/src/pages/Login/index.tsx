@@ -7,6 +7,7 @@ import {useDispatch,useSelector} from 'react-redux'
 import { UserLoginSchema } from "../../types/type";
 import img from '../../assets/download.png'
 import { authenticate, changeTheme } from "../../features/slice";
+import { toast } from "react-toastify";
 
 const Login: React.FC = () => {
   const dispatch = useDispatch()
@@ -31,6 +32,7 @@ const Login: React.FC = () => {
     .then(res=>{console.log(res.data.token)
       localStorage.setItem("token",res.data.token)
       dispatch(authenticate())
+      toast.success("Login Successful",{theme:theme?'dark':'light'})
       navigate('/')
     })
     .catch(error=>{
