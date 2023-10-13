@@ -14,9 +14,9 @@ const Contacts =()=>{
 
     return(
         <>
-            <div className={` w-full bg-gradient-to-r from-[#ceb2ff] via-[#c7a6ff] to-[#aa77f0] border-t-[1px] border-[#aa77f0] rounded-md `}>
+            <div className={` w-full bg-gradient-to-r from-[#d3bdfa] via-[#c7a6ff] to-[#aa77f0] border-t-[1px] border-[#aa77f0] rounded-md `}>
                 {/* <div className={`${theme?'bg-hero-pattern bg-cover':'bg-hero-pattern bg-cover'} w-full h-16 py-5 px-2 rounded-t-md flex justify-center`}>Contacts</div> */}
-                <div className={`${theme?'bg-[#313131] text-[#e0dfdf]':'bg-[#e6e5e5] text-[#525252]'} mt-[6px] rounded-md`}>
+                <div className={`${theme?'bg-[#313131] text-[#e0dfdf]':'bg-[#e6e5e5] text-[#525252]'} mt-[6px] rounded-md px-3`}>
                   <h2 className='text-left p-3'>Contacts</h2>
                   <div className={`h-[0.8px] ${theme?'bg-[#444343]':'bg-[#d1d0d0]'}`}></div>
 

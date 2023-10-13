@@ -73,15 +73,16 @@ const Profile = () => {
     return (
       <div className="pt-16 text-white min-h-screen flex items-center">
         <div className="w-full px-3 sm:px-10 flex">
-          <div className={`${theme?' bg-opacity-70':''} border-2 border-[#aa77f0] w-full rounded-md`}>
+          <div className={`${theme?' bg-opacity-70':''} shadow-lg shadow-[#aa77f0] w-full rounded-md`}>
             <form onSubmit={handleSubmit(onSubmit,onError)} className='flex flex-col justify-center border-0 rounded-r-xl w-full h-full backdrop-blur-[2px]'>
               <div className="flex flex-col lg:flex-row w-full">
                 {/* LEFT SIDE OF PROFILE */}
                 <aside className=" w-full md:w-[80%] xl:w-[50%] p-5">
-                  <div className={` ${theme?'bg-[rgba(36,36,59,0.5)] shadow-black':'bg-[#eeeefc]'} shadow-2xl rounded-md w-full`}>
+                  <div className={` ${theme?'bg-[#313131] shadow-black':'bg-[#efeeee]'} shadow-2xl rounded-md w-full`}>
                     <div>
-                      <h2 className={`${theme?'text-[#ffffff]':'text-[#232323]'} py-5 px-2 `}>Profile</h2>
-                      <div className="h-[0.8px] bg-[#444444]"></div>
+                      <h2 className={`${theme?'text-[#ffffff] bg-[#202022]':'text-[#4d4d4d] bg-[#d9d9d9]'} py-5 px-3 rounded-t-md`}>Profile</h2>
+                      {/* <div className="h-[0.8px] bg-[#444444]"></div> */}
+                      <div className={`h-[0.8px] ${theme?'bg-[#444343]':'bg-[#d1d0d0]'}`}></div>
                     </div>
                     <div className="p-3 flex justify-center lg:justify-center items-center">
                       <img src={picture} className="rounded-full w-40 h-40"/>
@@ -96,7 +97,8 @@ const Profile = () => {
                         </div>
                       </div>
                     </div>
-                    <div className="h-[0.8px] bg-[#444444] mx-4"></div>
+                    {/* <div className="h-[0.8px] bg-[#444444] mx-4"></div> */}
+                    <div className={`h-[0.8px] ${theme?'bg-[#444343]':'bg-[#d1d0d0]'}`}></div>
                     <div className={`flex ${theme?'text-[#c3c3fc]':'text-[#232323]'} justify-center text-2xl px-4 py-1 lg:px-5 lg:py-10 gap-6`}>
                       <div className="flex gap-1 items-center text-sm "><i className="fa-solid fa-clipboard bg-transparent text-[#44df78] shadow-[#44df78] shadow-md"></i>200 Posts</div>
                       <div className="flex gap-1 items-center text-sm"><i className="fa-solid fa-user-group bg-transparent text-[#44df78] shadow-[#44df78] shadow-md"></i>300 Friends</div>
@@ -106,24 +108,27 @@ const Profile = () => {
 
                 {/* RIGHT SIDE OF PROFILE */}
                 <section className="w-full p-5 ">
-                <div className={`flex-1 ${theme?'bg-[rgba(36,36,59,0.5)] shadow-black':'bg-[#eeeefc]'} shadow-2xl rounded-md`}>
-                  <div><h2 className={`${theme?'text-[#ffffff]':'text-[#232323]'} py-5 px-2`}>Account Details</h2><div className="h-[0.8px] bg-[#444444]"></div></div>
+                <div className={`flex-1 ${theme?'bg-[#313131] shadow-black':'bg-[#efeeee]'} shadow-2xl rounded-md`}>
+                  <div><h2 className={`${theme?'text-[#ffffff] bg-[#202022]':'text-[#4d4d4d] bg-[#d9d9d9]'} py-5 px-3 rounded-t-md`}>Account Details</h2>
+                  {/* <div className="h-[0.8px] bg-[#444444]"></div> */}
+                  <div className={`h-[0.8px] ${theme?'bg-[#444343]':'bg-[#d1d0d0]'}`}></div>
+                  </div>
                     <div className="p-3 flex flex-col gap-5">
                       <div>
                       {/* <label className={`${theme?'text-[#d5d5d5]':'text-[#191919]'}`}>Fullname:</label> */}
-                      <input defaultValue={user.fullName} placeholder="Enter name" {...register("fullName",{required:true})} className={`${theme?'text-[#d5d5d5]':'text-[#191919]'} py-2 px-2 bg-opacity-20 border-0  border-b-2 border-[#888787] focus:border-[#888787] focus:border-b-0 bg-black w-full`} />
+                      <input defaultValue={user.fullName} placeholder="Enter name" {...register("fullName",{required:true})} className={`${theme?'text-[#d5d5d5] bg-black':'text-[#191919] bg-[#bcbbbb]'} py-2 px-2 bg-opacity-20 border-0  border-b-2 border-[#888787] focus:border-[#aa77f0] focus:outline-none  w-full`} />
                       {errors.fullName && <span className="text-[#f34242]">{errors.fullName?.message}</span>}
                       </div>
 
                       <div>
                       {/* <label className={`${theme?'text-[#d5d5d5]':'text-[#191919]'}`}>Username:</label> */}
-                      <input value={user.userName} placeholder="Enter username" {...register("userName",{required:true})} className={`${theme?'text-[#d5d5d5]':'text-[#191919]'} py-2 px-2 bg-opacity-20 border-0 border-b-2 border-[#888787] focus:border-[#888787] focus:border-b-0 bg-black w-full`} />
+                      <input value={user.userName} placeholder="Enter username" {...register("userName",{required:true})} className={`${theme?'text-[#d5d5d5] bg-black':'text-[#191919] bg-[#bcbbbb]'} py-2 px-2 bg-opacity-20 border-0 border-b-2 border-[#888787] focus:border-[#aa77f0] focus:outline-none  w-full`} />
                       {errors.userName && <span className="text-[#f34242]">This field is required</span>}
                       </div>
                       
                       <div>
                       {/* <label className={`${theme?'text-[#d5d5d5]':'text-[#191919]'}`}>Email:</label> */}
-                      <input placeholder="Enter email" value={user.email} {...register("email")} className={`${theme?'text-[#d5d5d5]':'text-[#191919]'} py-2 px-2 bg-opacity-20 border-0 border-b-2 border-[#888787] focus:border-[#888787] focus:border-b-0 bg-black w-full`} />
+                      <input placeholder="Enter email" value={user.email} {...register("email")} className={`${theme?'text-[#d5d5d5] bg-black':'text-[#191919] bg-[#bcbbbb]'} py-2 px-2 bg-opacity-20 border-0 border-b-2 border-[#888787] focus:border-[#aa77f0] focus:outline-none w-full`} />
                       {errors.email && <span className="text-[#f34242] ">Incorrect email</span>}
                       </div>
 

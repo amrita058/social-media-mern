@@ -29,3 +29,9 @@ export const ResetPasswordSchema = z.object({
 }).refine((value) => value.password === value.confirmPassword, {
     message: 'Password must match',
     path:["confirmPassword"]})
+
+
+export const AddPostSchema = z.object({
+    content: z.string().min(1,{message:''}),
+    photo: z.string()
+})
