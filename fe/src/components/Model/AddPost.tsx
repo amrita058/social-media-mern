@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { useForm, SubmitHandler} from 'react-hook-form';
 import {z} from "zod"
 import axios from 'axios';
@@ -16,6 +16,8 @@ type AddPostParams = z.infer<typeof AddPostSchema>
 
 const AddItemModal: React.FC<AddItemModalProps> = ({onClose}) => {
   const token = localStorage.getItem("token")
+  const [files, setFiles] = useState(null);
+  const inputRef = useRef<HTMLInputElement | null>(null);
 
   const theme = useSelector((state:any)=>{
     // console.log(state.theme)
@@ -71,6 +73,15 @@ const AddItemModal: React.FC<AddItemModalProps> = ({onClose}) => {
           console.log(e)
       }
 
+      // const handleDragOver = (event:any) => {
+      //   event.preventDefault();
+      // };
+    
+      // const handleDrop = (event:any) => {
+      //   event.preventDefault();
+      //   setUserImage(event.dataTransfer.files)
+      // };
+
   return (
     <>
         <div className="fixed top-0 left-0 min-h-screen w-full z-[100] flex justify-center items-center bg-black bg-opacity-80"  onClick={()=>handleClick("close")}></div>
@@ -90,7 +101,11 @@ const AddItemModal: React.FC<AddItemModalProps> = ({onClose}) => {
                 {/* {errors.content && <p className='text-red-400'>{errors.content.message}</p>} */}
 
                 <div className='flex gap-4 justify-between items-center'>
-                    <input type="file" placeholder='Enter image URL' {...register('file')} className={`${theme?'text-[#c4c3c3] bg-black':'text-[#555555] bg-transparent'} bg-opacity-5 focus:outline-none`} onChange={(e)=>{setUserImage(e.target.files?e.target.files[0]:null)}} />
+                  {/* <div className="dropzone" onDragOver={handleDragOver} onDrop={handleDrop}> */}
+                  <label htmlFor="choose_file" className="py-1 px-2 bg-[#aa77f0] cursor-pointer rounded-md text-white">Choose Image
+                    <input type="file" id='choose_file' placeholder='Enter image URL' {...register('file')} className={`${theme?'text-[#c4c3c3] bg-black':'text-[#555555] bg-transparent'} bg-opacity-5 focus:outline-none`} onChange={(e)=>{setUserImage(e.target.files?e.target.files[0]:null)}} hidden accept="image/png, image/jpeg" />
+                  </label>
+                  {/* </div> */}
                 </div>
                 {/* {errors.photo && <p className='text-red-400'>{errors.photo.message}</p>} */}
                 

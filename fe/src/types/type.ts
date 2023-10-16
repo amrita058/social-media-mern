@@ -35,3 +35,8 @@ export const AddPostSchema = z.object({
     content: z.string().min(1,{message:''}),
     file: z.any()
 })
+
+export const CommentPostSchema = z.object({
+    comment:z.string().refine((value) => value.trim() !== '', {
+        message: 'Enter some content'})
+})

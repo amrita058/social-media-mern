@@ -17,10 +17,10 @@ export const verifyJwt = (req: Request, res: Response, next: NextFunction) => {
     return res.status(401).json({ message: 'Access denied. Token missing.' });
   }
   jwt.verify(token,env.SECRET_KEY as string,(err: any, decoded:any)=>{
-    console.log("error")
+    // console.log("error",err)
     if (err) return res.status(401).json("Invalid token")
-    console.log(req.user)
     req.user = decoded
+    // console.log("user here",req.user)
     next()
   })
 };

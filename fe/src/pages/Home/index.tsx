@@ -3,6 +3,7 @@ import Bio from '../../components/Bio';
 import Contacts from '../../components/Contacts';
 import { useState } from 'react';
 import AddItemModal from '../../components/Model/AddPost';
+import Posts from '../../components/Post';
 // import MouseTracking from '../Mouse';
 
 const Home = () => {
@@ -27,13 +28,14 @@ const Home = () => {
     <div className='flex justify-between w-full px-10 py-4'>
 
       {/* LEFT SIDE CONTENT OF HOME */}
-      <div className='w-[25%] text-center'>
+      <div className='w-[25%] text-center fixed left-0 pl-8'>
         <Bio/>
         {/* <MouseTracking/> */}
       </div>
 
       {/* MIDDLE CONTENT OF HOME */}
-      <div className='w-[50%] flex px-3 h-fit'>
+      <div className='flex flex-col w-[50%] px-3 gap-3 ml-[25%]'>
+      <div className='w-full flex h-fit'>
         {showPostForm?<AddItemModal onClose={onClose}/>:<></>}
         <div className={`w-full ${theme?'bg-[#313131]':'bg-[#000000] bg-opacity-5 border-[1px] border-[#d4d4d4]'} rounded-xl shrink-0`}>
             <div className='flex gap-3 w-[100%] py-3 px-6 shrink-0'>
@@ -48,9 +50,12 @@ const Home = () => {
             </div>
         </div>
       </div>
+      <Posts/>
+      </div>
+      {/* <Posts/> */}
 
       {/* RIGHT SIDE CONTENT OF HOME */}
-      <div className='w-[25%] text-center'><Contacts/></div>
+      <div className='w-[25%] text-center fixed right-0 pr-8'><Contacts/></div>
     </div>
   </div>
   </div>
