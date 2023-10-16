@@ -23,6 +23,7 @@ const Profile = () => {
     // reset,
     formState: { errors },
   } = useForm<RegisterParams>({resolver:zodResolver(UserRegisterSchema.partial())})
+  const [userImage, setUserImage] = useState<any>()
 
   useEffect(()=>{
     dispatch(changeDrop(false))
@@ -43,16 +44,23 @@ const Profile = () => {
   },[user])
 
   const onChangePicture = (e:any) => {
-    console.log('picture: ', picture);
-    setPicture(URL.createObjectURL(e.target.files[0]));
-    console.log("updated url",picture)
+    // console.log('picture: ', picture)
+    setPicture(URL.createObjectURL(e.target.files[0]))
+    setUserImage(e.target.files?e.target.files[0]:null)
+    // console.log("updated url",picture)
   };
 
-  const onSubmit: SubmitHandler<RegisterParams> = (data) => {
-    console.log(user._id)
-    axios.post(`http://localhost:7000/api/user/${user._id}`,{url:picture},{
+  const onSubmit: SubmitHandler<RegisterParams> = (data,e) => {
+    e?.preventDefault()
+    const formData = new FormData()
+    formData.append('file', userImage)
+    if (data.fullName !== undefined) {
+      formData.append('fullName', data.fullName)
+    }
+    axios.post(`http://localhost:7000/api/user/${user._id}`,formData,{
       headers: {
         Authorization: `${token}`,
+        "Content-Type": "multipart/form-data",
       }})
     .then(res=>{
       console.log(res.data)
@@ -74,7 +82,7 @@ const Profile = () => {
       <div className="pt-16 text-white min-h-screen flex items-center">
         <div className="w-full px-3 sm:px-10 flex">
           <div className={`${theme?' bg-opacity-70':''} shadow-lg shadow-[#aa77f0] w-full rounded-md`}>
-            <form onSubmit={handleSubmit(onSubmit,onError)} className='flex flex-col justify-center border-0 rounded-r-xl w-full h-full backdrop-blur-[2px]'>
+            <form onSubmit={handleSubmit(onSubmit,onError)} className='flex flex-col justify-center border-0 rounded-r-xl w-full h-full backdrop-blur-[2px]' encType="multipart/form-data">
               <div className="flex flex-col lg:flex-row w-full">
                 {/* LEFT SIDE OF PROFILE */}
                 <aside className=" w-full md:w-[80%] xl:w-[50%] p-5">
@@ -91,7 +99,7 @@ const Profile = () => {
                         <p className={`text-sm mb-7`}>{user.email}</p>
                         <div>
                           <label htmlFor="choose_file" className="py-1 px-2 bg-[#aa77f0] cursor-pointer rounded-md text-white">Change Image
-                          <input type="file" id="choose_file" name="video_to_upload" className="hidden" onChange={onChangePicture}/>
+                          <input type="file" id="choose_file" name="video_to_upload" className="hidden" onChange={(e)=>{onChangePicture(e)}}/>
                           {/* <i className="fa fa-cloud-upload fa-fw" aria-hidden="true"></i>&nbsp; */}
                           </label>
                         </div>
@@ -113,21 +121,21 @@ const Profile = () => {
                   {/* <div className="h-[0.8px] bg-[#444444]"></div> */}
                   <div className={`h-[0.8px] ${theme?'bg-[#444343]':'bg-[#d1d0d0]'}`}></div>
                   </div>
-                    <div className="p-3 flex flex-col gap-5">
+                    <div className="p-3 flex flex-col gap-11">
                       <div>
-                      {/* <label className={`${theme?'text-[#d5d5d5]':'text-[#191919]'}`}>Fullname:</label> */}
+                      <label className={`${theme?'text-[#d5d5d5]':'text-[#191919]'}`}>Fullname:</label>
                       <input defaultValue={user.fullName} placeholder="Enter name" {...register("fullName",{required:true})} className={`${theme?'text-[#d5d5d5] bg-black':'text-[#191919] bg-[#bcbbbb]'} py-2 px-2 bg-opacity-20 border-0  border-b-2 border-[#888787] focus:border-[#aa77f0] focus:outline-none  w-full`} />
                       {errors.fullName && <span className="text-[#f34242]">{errors.fullName?.message}</span>}
                       </div>
 
                       <div>
-                      {/* <label className={`${theme?'text-[#d5d5d5]':'text-[#191919]'}`}>Username:</label> */}
+                      <label className={`${theme?'text-[#d5d5d5]':'text-[#191919]'}`}>Username:</label>
                       <input value={user.userName} placeholder="Enter username" {...register("userName",{required:true})} className={`${theme?'text-[#d5d5d5] bg-black':'text-[#191919] bg-[#bcbbbb]'} py-2 px-2 bg-opacity-20 border-0 border-b-2 border-[#888787] focus:border-[#aa77f0] focus:outline-none  w-full`} />
                       {errors.userName && <span className="text-[#f34242]">This field is required</span>}
                       </div>
                       
                       <div>
-                      {/* <label className={`${theme?'text-[#d5d5d5]':'text-[#191919]'}`}>Email:</label> */}
+                      <label className={`${theme?'text-[#d5d5d5]':'text-[#191919]'}`}>Email:</label>
                       <input placeholder="Enter email" value={user.email} {...register("email")} className={`${theme?'text-[#d5d5d5] bg-black':'text-[#191919] bg-[#bcbbbb]'} py-2 px-2 bg-opacity-20 border-0 border-b-2 border-[#888787] focus:border-[#aa77f0] focus:outline-none w-full`} />
                       {errors.email && <span className="text-[#f34242] ">Incorrect email</span>}
                       </div>

@@ -1,11 +1,12 @@
 import { Router } from "express";
 const jwt = require("jsonwebtoken")
-import express from "express"
 
-import * as UserController from './Controller'
+import * as PostController from '../Controller'
 import { Request, Response } from 'express';
 import { env } from "process";
-const multer = require('multer');
+import { verifyJwt } from "../../Middleware/user";
+import { upload } from "../../Middleware/multer";
+// const multer = require('multer');
 
 declare module 'express' {
     export interface Request {
@@ -14,19 +15,20 @@ declare module 'express' {
     }
   }
 
-const storage = multer.diskStorage({
-  destination: (req: Request, file: any, cb:any) => {
-    cb(null, './src/Posts/uploads');
-  },
-  filename: (req: Request, file:any, cb:any) => {
-    cb(null, Date.now() + '-' + file.originalname);
-  },
-});
+// const storage = multer.diskStorage({
+//   destination: (req: Request, file: any, cb:any) => {
+//     cb(null, './src/uploads');
+//   },
+//   filename: (req: Request, file:any, cb:any) => {
+//     cb(null, Date.now() + '-' + file.originalname);
+//   },
+// });
 
-const upload = multer({
-    storage: storage,
-    limits: { fileSize: 1024 * 1024 }
-  });
+// const upload = multer({
+//     storage: storage,
+//     limits: { fileSize: 1024 * 1024 }
+//   });
+
 const router = Router();
 
 const routes = () => {
@@ -36,6 +38,7 @@ const routes = () => {
         console.log(imageURL)
         res.status(201).json(imageURL)
     })
+    router.post("/posts",verifyJwt,upload.single('file'),PostController.uploadPost)
     return router;
 }
 

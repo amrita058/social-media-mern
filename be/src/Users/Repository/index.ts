@@ -1,6 +1,6 @@
 const jwt = require("jsonwebtoken")
 const bcrypt = require('bcrypt');
-const mongoose = require("mongoose")
+const mongoose = require("../../database")
 import {z} from "zod"
 import { UserLoginSchema, UserRegisterSchema } from "../../types"
 import { env } from "../../config"
@@ -12,15 +12,15 @@ import { error } from "console";
 type loginParams = z.infer<typeof UserLoginSchema>
 type registerParams = z.infer<typeof UserRegisterSchema>
 
-const options = {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  };
+// const options = {
+//     useNewUrlParser: true,
+//     useUnifiedTopology: true,
+//   };
   
-  mongoose.connect(env.URI,options)
-  mongoose.connection.on('open',()=>{
-    console.log("connected")
-  })
+//   mongoose.connect(env.URI,options)
+//   mongoose.connection.on('open',()=>{
+//     console.log("connected")
+//   })
 
 export const registerUser = async(user:registerParams)=>{
     try{
@@ -122,25 +122,22 @@ export const authUser = async (decoded:any)=>{
     }
 }
 
-export const updateProfile = async(user:Partial<registerParams>,id:any)=>{
+export const updateProfile = async(user:Partial<registerParams>,file:any,id:any)=>{
     try{
-        console.log("st repo0",id)
+        // console.log("at updateProfile repo",id,file,user)
         const checkUser = await User.findOne({"_id":new ObjectId(id)})
-        console.log(checkUser)
-        const _id = new ObjectId(id)
-        const updateUser = await User.updateOne({"_id":_id},{ $set: { url:user.url } },{new:true})
-        // .then(() => {
-        //     console.log('Documents updated successfully.');
-        //   })
-        //   .catch((error:any) => {
-        //     console.error('Error updating documents:', error);
-        //     throw error
-        //   })
-        console.log(checkUser,updateUser,user.url)
+        if(checkUser){
+            const _id = new ObjectId(id)
+            const imageURL = `http://localhost:${env.PORT}/uploaded/${file}`
+            const updateUser = await User.updateOne({"_id":_id},{ $set: { url:imageURL } },{new:true})
+        }
+        else{
+            throw Error("User not found")
+        }
         return "Profile successfully updated"
     }
     catch(e){
-        console.log(error)
-        return e
+        console.log(e)
+        throw e
     }
 }

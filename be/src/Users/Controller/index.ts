@@ -57,8 +57,9 @@ export const authUser = async (req:Request,res:Response)=>{
 
 export const updateProfile = async (req:Request,res:Response)=>{
     try{
-        console.log("update profile controller",req.params)
-        res.status(201).json(await UserService.updateProfile(req.body,req.params))
+        // console.log("update profile controller",req.params)
+        // console.log("body here",req.body.email,req.file.filename)
+        res.status(201).json(await UserService.updateProfile(req.body,req.file.filename,req.params))
     }
     catch(e){
         res.status(500).json(e)

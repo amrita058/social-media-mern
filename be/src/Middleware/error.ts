@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
-import { CustomError } from '../../libs';
+import { CustomError } from '../libs';
 import multer from 'multer';
 
 export const errorHandler = (err:Error,req:Request,res:Response,next:NextFunction)=>{

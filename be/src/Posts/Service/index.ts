@@ -1,21 +1,10 @@
-// import { Request, Response } from 'express';
-// const multer = require('multer');
+import * as PostRepository from "../Repository"
 
-// const storage = multer.diskStorage({
-//   destination: (req: Request, file: any, cb:any) => {
-//     cb(null, '../static/images');
-//   },
-//   filename: (req: Request, file:any, cb:any) => {
-//     cb(null, Date.now() + '-' + file.originalname);
-//   },
-// });
 
-// const upload = multer({ storage });
-
-export const uploadPost =(file:any)=>{
+export const uploadPost =(content:string,file:any)=>{
   try{
-    console.log("reached here")
-    return "true"
+    console.log("reached here at upload post service")
+    return PostRepository.uploadPost(content,file)
 
   }catch(e){
     console.log("error in file upload",e)

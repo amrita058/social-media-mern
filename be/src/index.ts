@@ -1,11 +1,13 @@
 import express, { Express, NextFunction, Request, Response } from 'express'
 import bodyParser from 'body-parser'
 import cors from "cors"
-import { errorHandler } from './Users/Middleware/error'
+import { errorHandler } from './Middleware/error'
 import { env } from './config'
 import userRoutes from "./Users/Routes"
-import postRoutes from "./Posts/index"
+import postRoutes from "./Posts/Routes"
 import path from 'path'
+import { connectDB } from './database'
+import { CustomError } from './libs'
 const socketIo = require('socket.io');
 const http = require('http');
 
@@ -33,14 +35,14 @@ io.on("connection", (socket:any) => {
   })
 });
 
-// app.use('/uploaded', express.static('src\\Posts\\uploads'));
-app.use('/uploaded', express.static(path.join(__dirname, 'Posts', 'uploads')));
+connectDB()
+app.use('/uploaded', express.static(path.join(__dirname, 'uploads')));
 app.use("/api", userRoutes())
 app.use("/api",postRoutes())
 
 app.all("*", (req: Request, res:Response,next:NextFunction) => {
-    const error = new Error("Path not found")
-    error.name='404'
+    const error = new CustomError("Path not found",404)
+    error.name='not found'
     throw error
 })
 

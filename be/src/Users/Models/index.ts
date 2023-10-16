@@ -1,6 +1,6 @@
-const mongoose = require("mongoose")
+import mongoose from "mongoose"
 
-const userSchema = mongoose.Schema({
+const userSchema = new mongoose.Schema({
     email:String,
     userName:String,
     fullName:String,
@@ -11,8 +11,6 @@ const userSchema = mongoose.Schema({
   },
 },{
     versionKey: false, 
-  },{
-    strict: false
   }
   )
 

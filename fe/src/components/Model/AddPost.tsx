@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
-import { useForm, SubmitHandler, useFieldArray, useWatch } from 'react-hook-form';
+import { useForm, SubmitHandler} from 'react-hook-form';
 import {z} from "zod"
-// import { IItems } from '../../types/User';
 import axios from 'axios';
 import {toast } from 'react-toastify';
 import { useSelector } from 'react-redux';
@@ -16,6 +15,8 @@ interface AddItemModalProps {
 type AddPostParams = z.infer<typeof AddPostSchema>
 
 const AddItemModal: React.FC<AddItemModalProps> = ({onClose}) => {
+  const token = localStorage.getItem("token")
+
   const theme = useSelector((state:any)=>{
     // console.log(state.theme)
     return state.theme.dark
@@ -28,33 +29,11 @@ const AddItemModal: React.FC<AddItemModalProps> = ({onClose}) => {
     const {
         register,
         handleSubmit,
-        reset,
+        // reset,
         watch,
         // formState: { errors },
       } = useForm<AddPostParams>({resolver:zodResolver(AddPostSchema)});
       const [userImage, setUserImage] = useState<any>(); 
-
-
-      // const { fields,append, remove } = useFieldArray({
-      //   name: "files" // unique name for your Field Array
-      //   // keyName: "id", default to "id", you can change the key name
-      // });
-
-      // const files = useWatch({
-      //   name: "files"
-      // });
-
-      // function openFileDialog(index: any) {
-      //   (document as any).getElementById("file-upload-" + index).click();
-      // }
-    
-      // const setFile = (index: number, _event: any) => {
-      //   methods.setValue(`files[${index}].file` as any, _event.target.files[0]);
-      //   methods.setValue(
-      //     `files[${index}].title` as any,
-      //     _event.target.files[0]?.name
-      //   );
-      // };
 
       const contentInput = watch('content')
 
@@ -66,11 +45,14 @@ const AddItemModal: React.FC<AddItemModalProps> = ({onClose}) => {
         // console.log("form data here",formData,userImage,data.content)
         // for (var [key, value] of formData.entries()) { 
         //   console.log("formdata",key, value);}
-        await axios.post("http://localhost:7000/api/upload",formData, { 
-          headers: { "Content-Type": "multipart/form-data" }})
+        axios.post(`http://localhost:7000/api/posts`,formData,{
+          headers: {
+            Authorization: `${token}`,
+            "Content-Type": "multipart/form-data",
+          }})
         .then(res=>{console.log("Ack state",res.data)
           toast.success("Success",{theme:theme?"dark":"light"})
-          // onClose()
+          onClose()
         })
         .catch(error=>{console.log(error)
         toast.error(error.message,{theme:theme?'dark':'light'})})

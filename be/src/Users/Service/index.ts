@@ -130,9 +130,9 @@ export const authUser = async(decoded:any)=>{
     }
 }
 
-export const updateProfile = (user:Partial<registerParams>,id:any)=>{
+export const updateProfile = (user:Partial<registerParams>,file:any,id:any)=>{
     try{
-        return UserRepository.updateProfile(user,id)
+        return UserRepository.updateProfile(user,file,id)
     }
     catch(e){
         throw e

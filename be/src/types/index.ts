@@ -16,3 +16,8 @@ export const UserRegisterSchema = z.object({
                     message: 'Must contain at least one uppercase, one lowercase, one number, and one special character'}),
     url: z.string().optional()
 })
+
+export const PostSchema = z.object({
+    content: z.string(),
+    photo:z.string()
+})

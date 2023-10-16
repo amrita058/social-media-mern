@@ -1,12 +1,16 @@
-// const multer = require('multer');
+import { env } from "../../config"
+const Post = require("../Models/index")
 
-// const storage = multer.diskStorage({
-//   destination: function (req:Request, file:File, cb) {
-//     cb(null, '../static/images');
-//   },
-//   filename: function (req:Request, file:File, cb) {
-//     cb(null, Date.now() + '-' + file.originalname);
-//   }
-// });
 
-// const upload = multer({ storage });
+export const uploadPost = async(content:string,file:any)=>{
+    try{
+        const imageURL = `http://localhost:${env.PORT}/uploaded/${file}`
+        const newPost = await new Post({content:content,photo:imageURL})
+        const insertedPost = await newPost.save()
+        return "Post successfully updated"
+    }
+    catch(error){
+        console.log(error)
+        throw error
+    }
+}
