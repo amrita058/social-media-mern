@@ -32,7 +32,7 @@ const Register: React.FC = () => {
     await axios.post("http://localhost:7000/api/register",data)
     .then(res=>{
       console.log(res.data)
-      toast.success("Login Successful",{theme:theme?'dark':'light'})
+      toast.success("Register Successful",{theme:theme?'dark':'light'})
       navigate('/login')
       reset();
     })

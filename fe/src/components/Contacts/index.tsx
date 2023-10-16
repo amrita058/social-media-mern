@@ -20,14 +20,14 @@ const Contacts =()=>{
                   <h2 className='text-left p-3'>Contacts</h2>
                   <div className={`h-[0.8px] ${theme?'bg-[#444343]':'bg-[#d1d0d0]'}`}></div>
 
-                  {friends.map((item,idx)=>{return<>
+                  {friends.map((item,idx)=>{return<div key={idx}>
                     <div key={idx} className={`${theme?'hover:bg-[#3a3a3a]':'hover:bg-black hover:bg-opacity-5'} flex rounded-md items-center`}>
                         <img src={user.url} className={`w-10 h-10 mr-2 rounded-full`}/>
                         <button className={`text-md w-full text-left  hover:text-[#aa77f0] rounded-md py-3`}>
                              {item}
                         </button>
                     </div>
-                  </>})}
+                  </div>})}
 
                 </div>
             </div>

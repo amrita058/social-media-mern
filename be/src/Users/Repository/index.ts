@@ -19,7 +19,7 @@ const options = {
   
   mongoose.connect(env.URI,options)
   mongoose.connection.on('open',()=>{
-    // console.log("connected")
+    console.log("connected")
   })
 
 export const registerUser = async(user:registerParams)=>{
@@ -40,6 +40,7 @@ export const registerUser = async(user:registerParams)=>{
         }
         user.password = await bcrypt.hash(user.password, 10)
         const newUser = await new User(user)
+        newUser.url = "https://www.meme-arsenal.com/memes/b6a18f0ffd345b22cd219ef0e73ea5fe.jpg"
         const insertedUser = await newUser.save()
                                 .then((savedUser:registerParams) => {
                                         // console.log('New user saved:', savedUser);
@@ -113,7 +114,7 @@ export const authUser = async (decoded:any)=>{
         //     email:email,
         //     fullName:fullName,
         // }
-        console.log(checkUser)
+        // console.log(checkUser)
         return checkUser
     }
     catch(e){

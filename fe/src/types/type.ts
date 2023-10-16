@@ -33,5 +33,5 @@ export const ResetPasswordSchema = z.object({
 
 export const AddPostSchema = z.object({
     content: z.string().min(1,{message:''}),
-    photo: z.string()
+    file: z.any()
 })

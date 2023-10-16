@@ -46,7 +46,7 @@ export const resetPassword = async (req:Request,res:Response)=>{
 
 export const authUser = async (req:Request,res:Response)=>{
     try{
-        console.log("at auth user",req.user)
+        // console.log("at auth user",req.user)
         res.status(201).json(await UserService.authUser(req.user))
     }
     catch(e){
