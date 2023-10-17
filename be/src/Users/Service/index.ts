@@ -184,3 +184,14 @@ export const approveFriendRequest = async(requestid:string,status:string)=>{
         throw e
     }
 }
+
+export const viewProfile = async(userid:string)=>{
+    try{
+        return await UserRepository.viewProfile(userid)
+        // console.log(checkRequest)
+    }
+    catch(e){
+        console.log(e)
+        throw e
+    }
+}

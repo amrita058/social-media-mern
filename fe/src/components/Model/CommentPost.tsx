@@ -26,7 +26,7 @@ const CommentPostModal: React.FC<CommentModalProps> = ({onClose}) => {
     })
 
     const postInfo = useSelector((state:any)=>{
-        console.log("at comment model",state.postInfo)
+        // console.log("at comment model",state.postInfo)
         return state.postInfo
     })
 
@@ -40,11 +40,11 @@ const CommentPostModal: React.FC<CommentModalProps> = ({onClose}) => {
 
     const onSubmit: SubmitHandler<AddPostParams> = async (data,e) => {
       e?.preventDefault()
-      const formData = new FormData();
+      // const formData = new FormData();
       // console.log("form data here",formData,userImage,data.content)
       // for (var [key, value] of formData.entries()) { 
       //   console.log("formdata",key, value);}
-      axios.post(`http://localhost:7000/api/posts`,data,{
+      axios.post(`http://localhost:7000/api/posts/:id/comment`,data,{
         headers: {
           Authorization: `${token}`,
           "Content-Type": "multipart/form-data",

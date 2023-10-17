@@ -6,9 +6,10 @@ const Bio =()=>{
       })
 
       const user = useSelector((state:any)=>{
-        // console.log("at drop down",state.user)
+        console.log("at bio",state.user,)
         return state.user
       })
+      console.log(user.friends.length)
 
     return(
         <>
@@ -24,7 +25,7 @@ const Bio =()=>{
                         <p className='text-sm mb-2'>Posts</p>
                     </div>
                     <div className='flex-1'>
-                        <p className={`text-md ${theme?'text-[#e2e1e1]':'text-[#4e4e4e]'}`}>10</p>
+                        <p className={`text-md ${theme?'text-[#e2e1e1]':'text-[#4e4e4e]'}`}>{user.friends.length}</p>
                         <p className='text-sm'>Friends</p>
                     </div>
                   </div>

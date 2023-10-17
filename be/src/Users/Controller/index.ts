@@ -54,7 +54,6 @@ export const authUser = async (req:Request,res:Response)=>{
     }
 }
 
-
 export const updateProfile = async (req:Request,res:Response)=>{
     try{
         // console.log("update profile controller",req.params)
@@ -102,6 +101,17 @@ export const getFriendRequest = async(req:Request,res:Response)=>{
 export const approveFriendRequest = async(req:Request,res:Response)=>{
     try{
         res.status(201).json(UserService.approveFriendRequest(req.body._id,req.body.status))
+    }
+    catch(e){
+        console.log(e)
+        res.status(500).json(e)
+    }
+}
+
+export const viewProfile = async(req:Request,res:Response)=>{
+    try{
+        console.log("reached here at controller",req.params.id)
+        res.status(201).json(await UserService.viewProfile(req.params.id))
     }
     catch(e){
         console.log(e)

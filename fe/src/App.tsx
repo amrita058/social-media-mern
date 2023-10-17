@@ -36,7 +36,7 @@ function App() {
             Authorization: `${token}`,
           }})
           .then(res=>{
-            console.log(res.data)
+            // console.log(res.data)
             dispatch(changeUser(res.data))
             dispatch(authenticate())
             localStorage.setItem("auth",auth)

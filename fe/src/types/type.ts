@@ -26,14 +26,15 @@ export const ResetPasswordSchema = z.object({
                 .regex(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]+$/, {
                     message: 'Must contain at least one uppercase, one lowercase, one number, and one special character'}),
     confirmPassword:z.string()
-}).refine((value) => value.password === value.confirmPassword, {
-    message: 'Password must match',
-    path:["confirmPassword"]})
+    }).refine((value) => value.password === value.confirmPassword, {
+        message: 'Password must match',
+        path:["confirmPassword"]
+})
 
 
 export const AddPostSchema = z.object({
     content: z.string().min(1,{message:''}),
-    file: z.any()
+    file: z.any().optional()
 })
 
 export const CommentPostSchema = z.object({

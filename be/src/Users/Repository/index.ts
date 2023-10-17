@@ -1,10 +1,12 @@
 const jwt = require("jsonwebtoken")
 const bcrypt = require('bcrypt');
-const mongoose = require("../../database")
+// const mongoose = require("../../database")
 import {z} from "zod"
 import { FriendRequestSchema, UserLoginSchema, UserRegisterSchema } from "../../types"
 import { env } from "../../config"
 const User = require("../Models/index")
+const Post = require("../../Posts/Models/index")
+
 const FriendRequest = require("../Models/friendRequest.ts")
 import { CustomError } from "../../libs";
 import { ObjectId } from "mongodb";
@@ -13,15 +15,6 @@ type loginParams = z.infer<typeof UserLoginSchema>
 type registerParams = z.infer<typeof UserRegisterSchema>
 type friendRequestParams = z.infer<typeof FriendRequestSchema>
 
-// const options = {
-//     useNewUrlParser: true,
-//     useUnifiedTopology: true,
-//   };
-  
-//   mongoose.connect(env.URI,options)
-//   mongoose.connection.on('open',()=>{
-//     console.log("connected")
-//   })
 
 export const registerUser = async(user:registerParams)=>{
     try{
@@ -214,6 +207,25 @@ export const approveFriendRequest = async(requestid:string,status:string)=>{
                 // console.log("user and friend",user,friend)
             }
         }
+    }
+    catch(e){
+        console.log(e)
+        throw e
+    }
+}
+
+export const viewProfile = async(userid:string)=>{
+    try{
+        const posts = await Post.find({userId:new ObjectId(userid)})
+                    .populate({
+                    path: "userId",
+                    select: "_id userName url fullName email"
+                    })
+                    .sort({
+                    _id: -1
+                    })
+        console.log(posts)
+        return posts
     }
     catch(e){
         console.log(e)

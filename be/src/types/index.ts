@@ -19,7 +19,7 @@ export const UserRegisterSchema = z.object({
 
 export const PostSchema = z.object({
     content: z.string(),
-    photo:z.string()
+    photo:z.string().optional()
 })
 
 export const FriendRequestSchema = z.object({

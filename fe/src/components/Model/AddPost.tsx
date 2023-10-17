@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useState } from 'react';
 import { useForm, SubmitHandler} from 'react-hook-form';
 import {z} from "zod"
 import axios from 'axios';
@@ -16,11 +16,8 @@ type AddPostParams = z.infer<typeof AddPostSchema>
 
 const AddItemModal: React.FC<AddItemModalProps> = ({onClose}) => {
   const token = localStorage.getItem("token")
-  const [files, setFiles] = useState(null);
-  const inputRef = useRef<HTMLInputElement | null>(null);
 
   const theme = useSelector((state:any)=>{
-    // console.log(state.theme)
     return state.theme.dark
   })
 
@@ -44,6 +41,7 @@ const AddItemModal: React.FC<AddItemModalProps> = ({onClose}) => {
         const formData = new FormData();
         formData.append('file', userImage);
         formData.append('content', data.content);
+        formData.append('userId',user._id)
         // console.log("form data here",formData,userImage,data.content)
         // for (var [key, value] of formData.entries()) { 
         //   console.log("formdata",key, value);}
@@ -58,8 +56,6 @@ const AddItemModal: React.FC<AddItemModalProps> = ({onClose}) => {
         })
         .catch(error=>{console.log(error)
         toast.error(error.message,{theme:theme?'dark':'light'})})
-        // console.log(data);
-        // reset();
       };
 
       const handleClick =(state:string)=>{
@@ -72,15 +68,6 @@ const AddItemModal: React.FC<AddItemModalProps> = ({onClose}) => {
       const onError =(e:any)=>{
           console.log(e)
       }
-
-      // const handleDragOver = (event:any) => {
-      //   event.preventDefault();
-      // };
-    
-      // const handleDrop = (event:any) => {
-      //   event.preventDefault();
-      //   setUserImage(event.dataTransfer.files)
-      // };
 
   return (
     <>
@@ -101,11 +88,9 @@ const AddItemModal: React.FC<AddItemModalProps> = ({onClose}) => {
                 {/* {errors.content && <p className='text-red-400'>{errors.content.message}</p>} */}
 
                 <div className='flex gap-4 justify-between items-center'>
-                  {/* <div className="dropzone" onDragOver={handleDragOver} onDrop={handleDrop}> */}
                   <label htmlFor="choose_file" className="py-1 px-2 bg-[#aa77f0] cursor-pointer rounded-md text-white">Choose Image
                     <input type="file" id='choose_file' placeholder='Enter image URL' {...register('file')} className={`${theme?'text-[#c4c3c3] bg-black':'text-[#555555] bg-transparent'} bg-opacity-5 focus:outline-none`} onChange={(e)=>{setUserImage(e.target.files?e.target.files[0]:null)}} hidden accept="image/png, image/jpeg" />
                   </label>
-                  {/* </div> */}
                 </div>
                 {/* {errors.photo && <p className='text-red-400'>{errors.photo.message}</p>} */}
                 

@@ -45,7 +45,7 @@ export const dropSlice = createSlice({
 })
 
 //LOGGED IN USER INFO
-const initialUser = {_id:'',userName:'',email:'',fullName:'',url:''}
+const initialUser = {_id:'',userName:'',email:'',fullName:'',url:'', friends:[]}
 export const userInfoSlice = createSlice({
     name:"user",
     initialState:initialUser,
@@ -66,9 +66,12 @@ export const postInfoSlice = createSlice({
     initialState:initialPost,
     reducers:{
         clickedPost:(state,action)=>{
-            console.log("action here",action.payload)
+            // console.log("action here",action.payload)
+            if(!action.payload.photo){
+                action.payload.photo=""
+            }
             state =  {...state,...action.payload}
-            console.log("state here",state)
+            // console.log("state here",state)
             return state
         }
     }
