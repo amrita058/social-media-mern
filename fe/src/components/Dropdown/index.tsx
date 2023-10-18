@@ -49,7 +49,7 @@ const Dropdown = ()=>{
                   </div>
                 </div>
                 <div className={`${theme?'bg-[#1d1d1d] text-[#969595]':'bg-[#e9ebee] text-[#4e4e4e]'} mt-3 rounded-md px-2 py-1`} >
-                  <Link to='/profile'>
+                  <Link to='/editprofile'>
                     <button className={`text-[18px] w-full text-left ${theme?'hover:bg-[#3a3a3a]':'hover:bg-black hover:bg-opacity-10'} rounded-md py-2 pl-1`}>
                       <i className="fa-solid fa-user mr-2"></i>Profile
                     </button>

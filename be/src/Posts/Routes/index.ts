@@ -40,6 +40,7 @@ const routes = () => {
     // })
     router.post("/posts",verifyJwt,upload.single('file'),PostController.uploadPost)
     router.get("/posts/user/:id",verifyJwt,PostController.getPost)
+    // router.post("/posts/:id/comments",verifyJwt,PostController.getComments)
     return router;
 }
 

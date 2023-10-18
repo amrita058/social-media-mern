@@ -28,13 +28,13 @@ const Home = () => {
     <div className='flex justify-between w-full px-10 py-4'>
 
       {/* LEFT SIDE CONTENT OF HOME */}
-      <div className='w-[25%] text-center fixed left-0 pl-8'>
+      <div className='w-[25%] text-center fixed left-0 pl-8 hidden md:block'>
         <Bio/>
         {/* <MouseTracking/> */}
       </div>
 
       {/* MIDDLE CONTENT OF HOME */}
-      <div className='flex flex-col w-[50%] px-3 gap-3 ml-[25%]'>
+      <div className='flex flex-col w-full md:w-[50%] px-3 gap-3 md:ml-[25%]'>
       <div className='w-full flex h-fit'>
         {showPostForm?<AddItemModal onClose={onClose}/>:<></>}
         <div className={`w-full ${theme?'bg-[#313131]':'bg-[#000000] bg-opacity-5 border-[1px] border-[#d4d4d4]'} rounded-xl shrink-0`}>
@@ -55,7 +55,7 @@ const Home = () => {
       {/* <Posts/> */}
 
       {/* RIGHT SIDE CONTENT OF HOME */}
-      <div className='w-[25%] text-center fixed right-0 pr-8'><Contacts/></div>
+      <div className='w-[25%] text-center fixed right-0 pr-8 hidden md:block'><Contacts/></div>
     </div>
   </div>
   </div>

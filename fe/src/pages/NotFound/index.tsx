@@ -1,9 +1,11 @@
-
+import img from "../../assets/nopage.png"
 const NotFound = () => {
   return (
-    <div>
-      <h1>404 - Page Not Found</h1>
-      <p>Sorry, the page you are looking for does not exist.</p>
+    <div className="h-screen w-full flex justify-center items-center">
+      <div>
+        {/* <h1 className="text-white">hi there</h1> */}
+        <img src={img} className="w-[90%] "></img>
+      </div>
     </div>
   );
 };

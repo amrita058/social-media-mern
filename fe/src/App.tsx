@@ -61,14 +61,15 @@ function App() {
       {auth?<Navbar/>:<></>}
       <div onClick={()=>dispatch(changeDrop(false))}>
         <Routes>
-          <Route path='/login/*' element={auth?<Suspense><Navigate to='/' /></Suspense>:<Suspense><Login/></Suspense>}></Route>
-          <Route path='/register/*' element={auth?<Suspense><Navigate to='/' /></Suspense>:<Suspense><Register/></Suspense>}></Route>
-          <Route path="/forgetpassword/*" element={<Suspense><ForgetPassword /></Suspense>} />
-          <Route path="/resetpassword/*" element={<Suspense><ResetPassword/></Suspense>} />
-          <Route path='/*' element={auth?<Suspense><Home /></Suspense>:<Suspense><Navigate to='/login'/></Suspense>}></Route>
-          <Route path='/profile/*' element={auth?<Suspense><Profile /></Suspense>:<Suspense><Navigate to='/login'/></Suspense>}></Route>
-          <Route path='/friends/*' element={auth?<Suspense><Friends /></Suspense>:<Suspense><Navigate to='/login'/></Suspense>}></Route>
-          <Route element={<Suspense><NotFound/></Suspense>}></Route>
+          <Route path='/login' element={auth?<Suspense><Navigate to='/' /></Suspense>:<Suspense><Login/></Suspense>}></Route>
+          <Route path='/register' element={auth?<Suspense><Navigate to='/' /></Suspense>:<Suspense><Register/></Suspense>}></Route>
+          <Route path="/forgetpassword" element={<Suspense><ForgetPassword /></Suspense>} />
+          <Route path="/resetpassword" element={<Suspense><ResetPassword/></Suspense>} />
+          <Route path='/' element={auth?<Suspense><Home /></Suspense>:<Suspense><Navigate to='/login'/></Suspense>}></Route>
+          <Route path='/editprofile' element={auth?<Suspense><Profile /></Suspense>:<Suspense><Navigate to='/login'/></Suspense>}></Route>
+          <Route path='/friends' element={auth?<Suspense><Friends /></Suspense>:<Suspense><Navigate to='/login'/></Suspense>}></Route>
+          <Route path='/profile/:id' element={auth?<Suspense><Friends /></Suspense>:<Suspense><Navigate to='/login'/></Suspense>}></Route>
+          <Route path='*' element={<Suspense><NotFound/></Suspense>}></Route>
         </Routes>
         </div>
       </BrowserRouter>
