@@ -1,6 +1,5 @@
 import { Router } from "express";
 const jwt = require("jsonwebtoken")
-// const multer = require('multer');
 
 import * as UserController from '../Controller'
 import {verifyJwt} from "../../Middleware/user"
@@ -13,19 +12,6 @@ declare module 'express' {
     }
   }
 
-// const storage = multer.diskStorage({
-//   destination: (req: Request, file: any, cb:any) => {
-//     cb(null, './src/uploads');
-//   },
-//   filename: (req: Request, file:any, cb:any) => {
-//     cb(null, Date.now() + '-' + file.originalname);
-//   },
-// });
-
-// const upload = multer({
-//     storage: storage,
-//     limits: { fileSize: 1024 * 1024 }
-//   });
 
 const router = Router();
 
@@ -36,6 +22,10 @@ const routes = () => {
     router.post('/resetpassword',verifyJwt,UserController.resetPassword)
     router.post('/auth',verifyJwt,UserController.authUser)
     router.post('/user/:id',verifyJwt,upload.single('file'),UserController.updateProfile)
+    router.get('/user/:id/profile',verifyJwt,UserController.viewProfile)
+    router.post('/friend-request',verifyJwt,UserController.friendRequest)
+    router.get('/user/:id/friend-request',verifyJwt,UserController.getFriendRequest)
+    router.post('/approve-request',verifyJwt,UserController.approveFriendRequest)
     return router;
 }
 

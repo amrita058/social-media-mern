@@ -92,13 +92,13 @@ const Profile = () => {
                       {/* <div className="h-[0.8px] bg-[#444444]"></div> */}
                       <div className={`h-[0.8px] ${theme?'bg-[#444343]':'bg-[#d1d0d0]'}`}></div>
                     </div>
-                    <div className="p-3 flex justify-center lg:justify-center items-center">
+                    <div className="p-3 flex justify-center  items-center">
                       <img src={picture} className="rounded-full w-40 h-40"/>
-                      <div className={`p-3 ${theme?'text-[#c8c8c8]':'text-[#616161]'}`}>
+                      <div className={`p-3 text-lg ${theme?'text-[#c8c8c8]':'text-[#616161]'}`}>
                         <p>{user.userName}</p>
                         <p className={`text-sm mb-7`}>{user.email}</p>
-                        <div>
-                          <label htmlFor="choose_file" className="py-1 px-2 bg-[#aa77f0] cursor-pointer rounded-md text-white">Change Image
+                        <div className="-translate-x-12 translate-y-4">
+                          <label htmlFor="choose_file" className="py-1 px-2 hover:bg-[#555555] bg-[#aa77f0] cursor-pointer rounded-md text-white"><i className="fa-solid fa-camera-retro"></i>
                           <input type="file" id="choose_file" name="video_to_upload" className="hidden" onChange={(e)=>{onChangePicture(e)}}/>
                           {/* <i className="fa fa-cloud-upload fa-fw" aria-hidden="true"></i>&nbsp; */}
                           </label>
@@ -156,7 +156,7 @@ const Profile = () => {
                       </div> */}
 
                       <div className="">
-                      <input type="submit" value='Save Changes' className="border-2 border-[#888787] bg-[#aa77f0] text-[#ffffff] rounded-md px-2 py-1 cursor-pointer hover:shadow-md hover:shadow-white" />
+                      <input type="submit" value='Save Changes' className="border-2 border-[#888787] bg-[#aa77f0] text-[#ffffff] rounded-md px-2 py-1 cursor-pointer hover:shadow-md hover:shadow-white" ></input>
                       </div>
 
                     </div>

@@ -1,26 +1,20 @@
 const jwt = require("jsonwebtoken")
 const bcrypt = require('bcrypt');
-const mongoose = require("../../database")
+// const mongoose = require("../../database")
 import {z} from "zod"
-import { UserLoginSchema, UserRegisterSchema } from "../../types"
+import { FriendRequestSchema, UserLoginSchema, UserRegisterSchema } from "../../types"
 import { env } from "../../config"
 const User = require("../Models/index")
+const Post = require("../../Posts/Models/index")
+
+const FriendRequest = require("../Models/friendRequest.ts")
 import { CustomError } from "../../libs";
 import { ObjectId } from "mongodb";
-import { error } from "console";
 
 type loginParams = z.infer<typeof UserLoginSchema>
 type registerParams = z.infer<typeof UserRegisterSchema>
+type friendRequestParams = z.infer<typeof FriendRequestSchema>
 
-// const options = {
-//     useNewUrlParser: true,
-//     useUnifiedTopology: true,
-//   };
-  
-//   mongoose.connect(env.URI,options)
-//   mongoose.connection.on('open',()=>{
-//     console.log("connected")
-//   })
 
 export const registerUser = async(user:registerParams)=>{
     try{
@@ -40,7 +34,7 @@ export const registerUser = async(user:registerParams)=>{
         }
         user.password = await bcrypt.hash(user.password, 10)
         const newUser = await new User(user)
-        newUser.url = "https://www.meme-arsenal.com/memes/b6a18f0ffd345b22cd219ef0e73ea5fe.jpg"
+        // newUser.url = "https://www.meme-arsenal.com/memes/b6a18f0ffd345b22cd219ef0e73ea5fe.jpg"
         const insertedUser = await newUser.save()
                                 .then((savedUser:registerParams) => {
                                         // console.log('New user saved:', savedUser);
@@ -135,6 +129,103 @@ export const updateProfile = async(user:Partial<registerParams>,file:any,id:any)
             throw Error("User not found")
         }
         return "Profile successfully updated"
+    }
+    catch(e){
+        console.log(e)
+        throw e
+    }
+}
+
+export const friendRequest = async(request:friendRequestParams)=>{
+    try{
+        const requestFrom_id = new ObjectId(request.requestFrom)
+        const requestTo_id = new ObjectId(request.requestTo)
+        // console.log("body at repo",request)
+        const checkRequest = await FriendRequest.findOne({requestFrom:requestFrom_id,requestTo:requestTo_id})
+        // console.log("request from db",checkRequest)
+        if(checkRequest){
+            throw Error("Friend request already sent")
+        }
+        else{
+            const newRequest = await new FriendRequest(request) 
+            const insertedRequest = await newRequest.save()
+        }
+        return "Request successfully sent"
+    }
+    catch(e){
+        console.log(e)
+        throw e
+    }
+}
+
+export const getFriendRequest = async(requestid:string,page:number,limit:number)=>{
+    try{
+        const id = new ObjectId(requestid)
+        const checkRequest = await FriendRequest.find({requestTo:id,requestStatus:"Pending"})
+        .populate({
+            path: "requestFrom",
+            select: "userName fullName url email"
+        })
+        .skip((page-1)*limit)
+        .limit(limit)
+        .sort({
+            _id:-1
+        })
+        console.log(checkRequest,"at repo")
+        if(checkRequest){
+            return checkRequest
+        }
+        else{
+            return "No request found"
+        }
+    }
+    catch(e){
+        console.log(e)
+        throw e
+    }
+}
+
+export const approveFriendRequest = async(requestid:string,status:string)=>{
+    try{
+        const id = new ObjectId(requestid)
+        const checkRequest = await FriendRequest.findById(id)
+        console.log("here at repo check request",checkRequest)
+        if(!checkRequest){
+            return "No request found"
+        }
+        else{
+            const updateRequest = await FriendRequest.findByIdAndUpdate({_id:id},{requestStatus:status})
+            if(status==="Approved"){
+                console.log("user and friend",checkRequest.requestTo,checkRequest.requestFrom)
+                const user = await User.findById(checkRequest.requestTo)
+                user.friends.push(checkRequest.requestFrom)
+                await user.save()
+
+                const friend = await User.findById(checkRequest.requestFrom)
+                friend.friends.push(checkRequest.requestTo)
+                await friend.save()
+                // console.log("user and friend",user,friend)
+            }
+        }
+    }
+    catch(e){
+        console.log(e)
+        throw e
+    }
+}
+
+export const viewProfile = async(userid:string)=>{
+    try{
+        const posts = await Post.find({userId:new ObjectId(userid)})
+                    .populate({
+                    path: "userId",
+                    select: "_id userName url fullName email"
+                    })
+                    .sort({
+                    _id: -1
+                    })
+        console.log(posts)
+        return posts
     }
     catch(e){
         console.log(e)

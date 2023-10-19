@@ -5,11 +5,13 @@ const jwt = require("jsonwebtoken")
 const nodemailer = require('nodemailer');
 
 import { env } from '../../config';
-import { UserLoginSchema, UserRegisterSchema } from "../../types";
+import { FriendRequestSchema, UserLoginSchema, UserRegisterSchema } from "../../types";
 import { CustomError } from '../../libs';
 
 type loginParams = z.infer<typeof UserLoginSchema>
 type registerParams = z.infer<typeof UserRegisterSchema>
+type friendRequestParams = z.infer<typeof FriendRequestSchema>
+
 
 const transporter = nodemailer.createTransport({
     service: 'Gmail',
@@ -135,6 +137,61 @@ export const updateProfile = (user:Partial<registerParams>,file:any,id:any)=>{
         return UserRepository.updateProfile(user,file,id)
     }
     catch(e){
+        throw e
+    }
+}
+
+export const friendRequest = async(request:friendRequestParams)=>{
+    try{
+        const validateData = FriendRequestSchema.safeParse(request)
+        if(!validateData.success){
+            const error = new CustomError("Invalid data",401)
+            throw error
+        }
+        else{
+            return await UserRepository.friendRequest(request)
+        }
+    }
+    catch(e){
+        console.log(e)
+        throw e
+    }
+}
+
+export const getFriendRequest = async(requestid:string,page:number,limit:number)=>{
+    try{
+        const checkRequest = await UserRepository.getFriendRequest(requestid,page,limit)
+        // console.log(checkRequest)
+        if(checkRequest){
+            return checkRequest
+        }
+        else{
+            return "No requests found"
+        }
+    }
+    catch(e){
+        console.log(e)
+        throw e
+    }
+}
+
+export const approveFriendRequest = async(requestid:string,status:string)=>{
+    try{
+        const checkRequest = await UserRepository.approveFriendRequest(requestid,status)
+    }
+    catch(e){
+        console.log(e)
+        throw e
+    }
+}
+
+export const viewProfile = async(userid:string)=>{
+    try{
+        return await UserRepository.viewProfile(userid)
+        // console.log(checkRequest)
+    }
+    catch(e){
+        console.log(e)
         throw e
     }
 }

@@ -45,7 +45,7 @@ export const dropSlice = createSlice({
 })
 
 //LOGGED IN USER INFO
-const initialUser = {_id:'',userName:'',email:'',fullName:''}
+const initialUser = {_id:'',userName:'',email:'',fullName:'',url:'', friends:[]}
 export const userInfoSlice = createSlice({
     name:"user",
     initialState:initialUser,
@@ -59,9 +59,28 @@ export const userInfoSlice = createSlice({
     }
 })
 
+//CLICKED POST INFO
+const initialPost = {userName:'',url:'',content:'',photo:'',date:''}
+export const postInfoSlice = createSlice({
+    name:"postData",
+    initialState:initialPost,
+    reducers:{
+        clickedPost:(state,action)=>{
+            // console.log("action here",action.payload)
+            if(!action.payload.photo){
+                action.payload.photo=""
+            }
+            state =  {...state,...action.payload}
+            // console.log("state here",state)
+            return state
+        }
+    }
+})
+
 export const {showAuthenticate,authenticate,unauthenticate} = authSlice.actions
 export const {changeTheme} = themeSlice.actions
 export const {changeDrop} = dropSlice.actions
 export const {changeUser} = userInfoSlice.actions
+export const {clickedPost} = postInfoSlice.actions
 
-export default {auth:authSlice.reducer,theme:themeSlice.reducer,drop:dropSlice.reducer,user:userInfoSlice.reducer}
+export default {auth:authSlice.reducer,theme:themeSlice.reducer,drop:dropSlice.reducer,user:userInfoSlice.reducer,postInfo:postInfoSlice.reducer}

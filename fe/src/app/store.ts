@@ -6,6 +6,7 @@ export const store = configureStore({
         auth:allSlice.auth,
         theme:allSlice.theme,
         drop:allSlice.drop,
-        user:allSlice.user
+        user:allSlice.user,
+        postInfo:allSlice.postInfo
     }
 })
