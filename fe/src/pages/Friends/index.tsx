@@ -1,15 +1,84 @@
 import {useSelector} from 'react-redux'
 import FriendsCard from '../../components/Friends/FriendCard';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import FriendRequestCard from '../../components/Friends/FriendRequestCard';
+import axios from 'axios';
 
 const Friends = () => {
 
+  const token = localStorage.getItem('token')
   const [field, setField] = useState("friends")
+  const [friendRequests, setFriendRequests] = useState([])
+  const [friends, setFriends] = useState([])
 
   const theme = useSelector((state:any)=>{
     return state.theme.dark
   })
+
+   const user = useSelector((state:any)=>{
+        return state.user
+    })
+
+  useEffect(()=>{
+    const fetch =async()=>{
+      await axios.get(`http://localhost:7000/api/user/${user._id}/friend-request`,{
+        headers:{
+          Authorization: `${token}`
+        }
+      })
+        .then((res)=>{setFriendRequests(res.data);console.log("request dta here",res.data)})
+        .catch(err=>console.log(err))
+    }
+    fetch()
+  },[user])
+
+  useEffect(()=>{
+    const fetch =async()=>{
+      await axios.get(`http://localhost:7000/api/user/${user._id}/friends`,{
+        headers:{
+          Authorization: `${token}`
+        }
+      })
+        .then((res)=>{setFriends(res.data);console.log("request dta here",res.data)})
+        .catch(err=>console.log(err))
+    }
+    fetch()
+  },[user])
+
+  // const friends = [
+  //   {
+  //     _id:"1",
+  //     userName:"sekai",
+  //     fullName:"Sekai58",
+  //     email:"sekai@gmail.com",
+  //     url:"https://yt3.ggpht.com/a/AATXAJxigX1uC10NIZu1btPWktg-SUXteOTmFKDSiw=s900-c-k-c0xffffffff-no-rj-mo",
+  //     friends:[1,2,3],
+  //   },
+  //   {
+  //     _id:"2",
+  //     userName:"itachi",
+  //     fullName:"Itachi",
+  //     email:"itachi@gmail.com",
+  //     url:"https://yt3.googleusercontent.com/ytc/AGIKgqP6a5KA5Hscrxdfv13eX78BxPmrawe8iv4RQWf4ag=s900-c-k-c0x00ffffff-no-rj",
+  //     friends:[1,2],
+  //   },
+  //   {
+  //     _id:"3",
+  //     userName:"erwin",
+  //     fullName:"erwin",
+  //     email:"erwin@gmail.com",
+  //     url:"https://yt3.ggpht.com/a/AATXAJxigX1uC10NIZu1btPWktg-SUXteOTmFKDSiw=s900-c-k-c0xffffffff-no-rj-mo",
+  //     friends:[3,4,5,6],
+  //   },
+  //   {
+  //     _id:"4",
+  //     userName:"sakura",
+  //     fullName:"Sakura",
+  //     email:"sakura@gmail.com",
+  //     url:"https://yt3.googleusercontent.com/ytc/AGIKgqP6a5KA5Hscrxdfv13eX78BxPmrawe8iv4RQWf4ag=s900-c-k-c0x00ffffff-no-rj",
+  //     friends:[1],
+  //   }
+  // ]
 
   return (
     <div className="pt-16 text-white min-h-screen relative">
@@ -27,7 +96,24 @@ const Friends = () => {
         </aside>
         <section className={`absolute right-0 top-0 pt-16 w-[78%] min-h-screen ${theme?'bg-[#1a1919]':'bg-[#e9ebee]'}  px-7`}>
           <div className="py-5 pr-10">
-            {(field==='friends')?<div className='flex flex-wrap gap-3 justify-evenly'><FriendsCard/><FriendsCard/><FriendsCard/><FriendsCard/></div>:<div className='flex flex-wrap gap-3 justify-evenly lg:justify-start'><FriendRequestCard/><FriendRequestCard/><FriendRequestCard/><FriendRequestCard/><FriendRequestCard/><FriendRequestCard/><FriendRequestCard/></div>}
+            {(field==='friends')?
+              <div className='flex flex-wrap gap-3 justify-evenly lg:justify-start'>
+                {friends.map((friend,idx)=>{
+                  return(
+                  <div key={idx}>
+                    <FriendsCard friend={friend} />
+                  </div>)
+                })}
+              </div>:
+              <div className='flex flex-wrap gap-3 justify-evenly lg:justify-start'>
+                {friendRequests.map((friend,idx)=>{
+                  return(
+                  <div key={idx}>
+                    <FriendRequestCard friend={friend} />
+                  </div>)
+                })}
+              </div>
+            }
           </div>
         </section>
       </div>

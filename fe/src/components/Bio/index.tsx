@@ -1,4 +1,7 @@
+// import axios from 'axios'
+// import { useEffect } from 'react'
 import {useSelector} from 'react-redux'
+import { Link } from 'react-router-dom'
 
 const Bio =()=>{
     const theme = useSelector((state:any)=>{
@@ -6,10 +9,9 @@ const Bio =()=>{
       })
 
       const user = useSelector((state:any)=>{
-        console.log("at bio",state.user,)
+        // console.log("at bio",state.user,)
         return state.user
       })
-      console.log(user.friends.length)
 
     return(
         <>
@@ -21,18 +23,20 @@ const Bio =()=>{
                   <div className={`h-[0.8px] ${theme?'bg-[#444343]':'bg-[#d1d0d0]'} mb-2`}></div>
                   <div className='flex justify-evenly'>
                     <div className={`flex-1 border-r-2 ${theme?'border-[#5a5959]':'border-[#c4c3c3]'}`}>
-                        <p className={`text-md ${theme?'text-[#e2e1e1]':'text-[#4e4e4e]'}`}>100</p>
-                        <p className='text-sm mb-2'>Posts</p>
+                        {/* <p className={`text-md ${theme?'text-[#e2e1e1]':'text-[#4e4e4e]'}`}>100</p> */}
+                        <p className='text-sm mb-2'>📹 100 Posts</p>
                     </div>
                     <div className='flex-1'>
-                        <p className={`text-md ${theme?'text-[#e2e1e1]':'text-[#4e4e4e]'}`}>{user.friends.length}</p>
-                        <p className='text-sm'>Friends</p>
+                        {/* <p className={`text-md ${theme?'text-[#e2e1e1]':'text-[#4e4e4e]'}`}>{user.friends.length}</p> */}
+                        <p className='text-sm'>🤷‍♂️ {user.friends.length} Friends</p>
                     </div>
                   </div>
                   <div className={`h-[0.8px] ${theme?'bg-[#444343]':'bg-[#d1d0d0]'} mt-2 mb-1`}></div>
+                  <Link to={`/profile/${user._id}`}>
                   <button className={`text-md w-full text-center ${theme?'hover:bg-[#3a3a3a]':'hover:bg-black hover:bg-opacity-5'} hover:text-[#aa77f0] rounded-md py-3`}>
                       My Profile
                   </button>
+                  </Link>
                   </div>
               </div>
         </>

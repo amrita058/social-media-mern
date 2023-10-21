@@ -1,14 +1,23 @@
-import { Link} from 'react-router-dom'
+import { Link, useNavigate} from 'react-router-dom'
 import {useSelector,useDispatch} from 'react-redux'
 import {changeDrop, changeTheme} from '../../features/slice';
 import { useLocation } from 'react-router-dom';
+import { useForm } from 'react-hook-form';
 import img from '../../assets/sslogo.png'
 import Dropdown from '../Dropdown/index';
+import axios from 'axios';
+import {z} from "zod"
+import { SearchUserSchema } from '../../types/type';
 
 const Navbar = () => {
+  const token = localStorage.getItem('token')
   const dispatch = useDispatch()
   const location = useLocation()
+  const navigate = useNavigate()
+  const { register, handleSubmit } = useForm();
 
+  type SearchParams = z.infer<typeof SearchUserSchema>
+  
   const theme = useSelector((state:any)=>{
     return state.theme.dark
   })
@@ -16,6 +25,24 @@ const Navbar = () => {
   const handleTheme =()=>{
     dispatch(changeTheme())
   }
+
+  const onSubmit = (data:any) => {
+    console.log("query",data.query)
+    axios.get(`http://localhost:7000/api/user/search?name=${data.query}`,{
+      headers:{
+        Authorization:`${token}`
+      }
+    })
+    .then(res=>{console.log(res.data)})
+    // onSearch(data.query);
+    navigate(`/search/user?name=${data.query}`)
+  };
+
+  const handleKeyDown = (e:any) => {
+    if (e.key === 'Enter') {
+      handleSubmit(onSubmit)();
+    }
+  };
 
   return (
   <div className={`fixed top-0 left-0 z-[99] w-full ${theme?'bg-[#1a1919] border-[#232323]':'bg-[#e9ebee] border-[#cdcdfc]'} border-b-[1px] `}>
@@ -28,7 +55,9 @@ const Navbar = () => {
           </div>
           <div className={`relative ${theme?'text-[#5d5c5c]':'text-[#bcbaba]'}`}>
             <span className="absolute left-2 top-2"><i className="fa-solid fa-magnifying-glass"></i></span>
-            <input type="text" placeholder='Search SocialSync' className={`pl-7 h-10 w-28 sm:w-56 border-1 ${theme?'bg-[#323232] text-[#929191]':'bg-[#000000] bg-opacity-5 text-[#545454]'}  rounded-full transition-all duration-300 ease-in-out sm:focus:w-80 focus:w-full focus:outline-none focus:border-2 focus:border-[#aa77f0]`}/>
+            <form onSubmit={handleSubmit(onSubmit)}>
+            <input type="text" placeholder='Search SocialSync' {...register('query')} onKeyDown={(e)=>handleKeyDown(e)} className={`pl-7 h-10 w-28 sm:w-56 border-1 ${theme?'bg-[#323232] text-[#929191]':'bg-[#000000] bg-opacity-5 text-[#545454]'}  rounded-full transition-all duration-300 ease-in-out sm:focus:w-80 focus:w-full focus:outline-none focus:border-2 focus:border-[#aa77f0]`}/>
+            </form>
           </div>
         </div>
 

@@ -1,6 +1,6 @@
 import {useSelector,useDispatch} from 'react-redux'
 import {Link, useNavigate} from 'react-router-dom'
-import { changeDrop, unauthenticate} from '../../features/slice';
+import { changeDrop, changeUser, unauthenticate} from '../../features/slice';
 
 const Dropdown = ()=>{
   const navigate = useNavigate()
@@ -25,15 +25,10 @@ const Dropdown = ()=>{
     localStorage.removeItem('token')
     localStorage.removeItem("auth")
     dispatch(unauthenticate())
+    dispatch(changeUser({_id:'',userName:'',email:'',fullName:'',url:'', friends:[]}))
     navigate('/login')
   }
 
-//  const data ={
-//   url:"https://th.bing.com/th/id/OIP.BTWP0AespzDI4q-8kFzHtwAAAA?pid=ImgDet&rs=1",
-//   userName:"sekai",
-//   email:"sakura@gmail.com",
-//   link:"profile"
-//  }
     return(
       <>
         <div className='h-8 w-8 rounded-full flex justify-center items-center text-xl text-[#ebebfe] cursor-pointer relative'>

@@ -6,6 +6,8 @@ import { authenticate, changeDrop, changeUser, unauthenticate } from './features
 import Navbar from './components/Navbar'
 import axios from 'axios'
 import { toast } from 'react-toastify'
+import ViewProfile from './pages/ViewProfile'
+import SearchUsers from './pages/SearchUsers'
 const Login = lazy(()=>import('./pages/Login'))
 const Register = lazy(()=>import('./pages/Register'))
 const ForgetPassword = lazy(()=>import('./pages/ForgetPassword'))
@@ -68,7 +70,8 @@ function App() {
           <Route path='/' element={auth?<Suspense><Home /></Suspense>:<Suspense><Navigate to='/login'/></Suspense>}></Route>
           <Route path='/editprofile' element={auth?<Suspense><Profile /></Suspense>:<Suspense><Navigate to='/login'/></Suspense>}></Route>
           <Route path='/friends' element={auth?<Suspense><Friends /></Suspense>:<Suspense><Navigate to='/login'/></Suspense>}></Route>
-          <Route path='/profile/:id' element={auth?<Suspense><Friends /></Suspense>:<Suspense><Navigate to='/login'/></Suspense>}></Route>
+          <Route path='/profile/:id' element={auth?<Suspense><ViewProfile /></Suspense>:<Suspense><Navigate to='/login'/></Suspense>}></Route>
+          <Route path='/search/user/' element={auth?<Suspense><SearchUsers /></Suspense>:<Suspense><Navigate to='/login'/></Suspense>}></Route>
           <Route path='*' element={<Suspense><NotFound/></Suspense>}></Route>
         </Routes>
         </div>

@@ -98,7 +98,7 @@ const Profile = () => {
                         <p>{user.userName}</p>
                         <p className={`text-sm mb-7`}>{user.email}</p>
                         <div className="-translate-x-12 translate-y-4">
-                          <label htmlFor="choose_file" className="py-1 px-2 hover:bg-[#555555] bg-[#aa77f0] cursor-pointer rounded-md text-white"><i className="fa-solid fa-camera-retro"></i>
+                          <label htmlFor="choose_file" className="py-1 px-2 hover:bg-[#555555] bg-[#aa77f0] cursor-pointer rounded-full text-white"><i className="fa-solid fa-camera-retro"></i>
                           <input type="file" id="choose_file" name="video_to_upload" className="hidden" onChange={(e)=>{onChangePicture(e)}}/>
                           {/* <i className="fa fa-cloud-upload fa-fw" aria-hidden="true"></i>&nbsp; */}
                           </label>
@@ -107,9 +107,12 @@ const Profile = () => {
                     </div>
                     {/* <div className="h-[0.8px] bg-[#444444] mx-4"></div> */}
                     <div className={`h-[0.8px] ${theme?'bg-[#444343]':'bg-[#d1d0d0]'}`}></div>
-                    <div className={`flex ${theme?'text-[#c3c3fc]':'text-[#232323]'} justify-center text-2xl px-4 py-1 lg:px-5 lg:py-10 gap-6`}>
-                      <div className="flex gap-1 items-center text-sm "><i className="fa-solid fa-clipboard bg-transparent text-[#44df78] shadow-[#44df78] shadow-md"></i>200 Posts</div>
-                      <div className="flex gap-1 items-center text-sm"><i className="fa-solid fa-user-group bg-transparent text-[#44df78] shadow-[#44df78] shadow-md"></i>300 Friends</div>
+                    <div className={`flex ${theme?'text-[#c3c3fc]':'text-[#232323]'} justify-center text-2xl px-4 py-1 lg:px-5 lg:py-5`}>
+                      <div className="text-[1.05rem]">📹 100 Posts</div>
+                       <div className="text-[1.75rem] px-3">|</div>
+                      <div className="text-[1.05rem]">🤷‍♂️ 300 Friends</div>
+                      {/* <div className="flex gap-1 items-center text-sm "><i className="fa-solid fa-clipboard bg-transparent text-[#44df78] shadow-[#44df78] shadow-md"></i>200 Posts</div> */}
+                      {/* <div className="flex gap-1 items-center text-sm"><i className="fa-solid fa-user-group bg-transparent text-[#44df78] shadow-[#44df78] shadow-md"></i>300 Friends</div> */}
                     </div>
                   </div>
                 </aside>

@@ -195,3 +195,38 @@ export const viewProfile = async(userid:string)=>{
         throw e
     }
 }
+
+
+export const getFriends = async(requestid:string,page:number,limit:number)=>{
+    try{
+        const checkRequest = await UserRepository.getFriends(requestid,page,limit)
+        // console.log(checkRequest)
+        if(checkRequest){
+            return checkRequest
+        }
+        else{
+            return "No requests found"
+        }
+    }
+    catch(e){
+        console.log(e)
+        throw e
+    }
+}
+
+export const searchPeople = async(name:any)=>{
+    try{
+        const checkRequest = await UserRepository.searchPeople(name)
+        // console.log(checkRequest)
+        if(checkRequest){
+            return checkRequest
+        }
+        else{
+            return "No requests found"
+        }
+    }
+    catch(e){
+        console.log(e)
+        throw e
+    }
+}

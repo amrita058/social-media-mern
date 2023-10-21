@@ -1,26 +1,47 @@
 import {useSelector} from 'react-redux'
 import Bio from '../../components/Bio';
 import Contacts from '../../components/Contacts';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import AddItemModal from '../../components/Model/AddPost';
 import Posts from '../../components/Post';
-// import MouseTracking from '../Mouse';
+import axios from 'axios';
 
 const Home = () => {
+  const token = localStorage.getItem('token')
   const [showPostForm,setshowPostForm] = useState(false)
+  const [posts, setPosts] = useState<any>([])
 
   const theme = useSelector((state:any)=>{
     return state.theme.dark
   })
 
   const user = useSelector((state:any)=>{
-    // console.log("at drop down",state.user)
     return state.user
   })
 
   const onClose =()=>{
     setshowPostForm(false)
   }
+
+  useEffect(()=>{
+    const fetch = async()=>{
+        console.log(user._id)
+        await axios.get(`http://localhost:7000/api/posts/user/${user._id}`,{
+            headers:{
+                Authorization: `${token}`
+            }
+        })
+        .then((res)=>{
+            console.log("posts data only",res.data)
+            setPosts(res.data)
+        })
+        .catch((err)=>{
+            console.log(err)
+            // toast.error("Unable to fetch any posts")
+        })
+    }
+    fetch()
+},[user])
 
   return (
     <div className='min-h-screen'>
@@ -50,7 +71,12 @@ const Home = () => {
             </div>
         </div>
       </div>
-      <Posts/>
+      {posts.map((post:any,index:number)=>{
+        return<div key={index}>
+          <Posts post={post}/>
+        </div>
+      })}
+      {/* <Posts/> */}
       </div>
       {/* <Posts/> */}
 

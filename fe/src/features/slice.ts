@@ -60,7 +60,7 @@ export const userInfoSlice = createSlice({
 })
 
 //CLICKED POST INFO
-const initialPost = {userName:'',url:'',content:'',photo:'',date:''}
+const initialPost = {id:'',userName:'',url:'',content:'',photo:'',date:''}
 export const postInfoSlice = createSlice({
     name:"postData",
     initialState:initialPost,

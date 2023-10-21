@@ -122,8 +122,13 @@ export const updateProfile = async(user:Partial<registerParams>,file:any,id:any)
         const checkUser = await User.findOne({"_id":new ObjectId(id)})
         if(checkUser){
             const _id = new ObjectId(id)
-            const imageURL = `http://localhost:${env.PORT}/uploaded/${file}`
-            const updateUser = await User.updateOne({"_id":_id},{ $set: { url:imageURL } },{new:true})
+            if(file!==""){
+                const imageURL = `http://localhost:${env.PORT}/uploaded/${file}`
+                const updateUser = await User.updateOne({"_id":_id},{ $set: { url:imageURL,fullName:user.fullName } },{new:true})
+            }
+            else{
+                const updateUser = await User.updateOne({"_id":_id},{ $set: {fullName:user.fullName } },{new:true})
+            }  
         }
         else{
             throw Error("User not found")
@@ -164,7 +169,7 @@ export const getFriendRequest = async(requestid:string,page:number,limit:number)
         const checkRequest = await FriendRequest.find({requestTo:id,requestStatus:"Pending"})
         .populate({
             path: "requestFrom",
-            select: "userName fullName url email"
+            select: "userName fullName url email friends"
         })
         .skip((page-1)*limit)
         .limit(limit)
@@ -214,18 +219,79 @@ export const approveFriendRequest = async(requestid:string,status:string)=>{
     }
 }
 
+// GET USERS POST + USER DETAILS
 export const viewProfile = async(userid:string)=>{
     try{
         const posts = await Post.find({userId:new ObjectId(userid)})
                     .populate({
                     path: "userId",
-                    select: "_id userName url fullName email"
+                    select: "_id userName url fullName email friends"
                     })
                     .sort({
                     _id: -1
                     })
         console.log(posts)
         return posts
+    }
+    catch(e){
+        console.log(e)
+        throw e
+    }
+}
+
+
+export const getFriends = async(requestid:string,page:number,limit:number)=>{
+    try{
+        console.log("get post repo")
+        const userId = new ObjectId(requestid)
+        const user = await User.findById(userId)
+        const friends = user.friends.toString().split(",") ?? []
+
+        const users = await User.find({})
+        .skip((page-1)*limit)
+        .limit(limit)
+        .sort({
+            _id:-1
+        })
+
+        const friendsdetail = users?.filter((user:any)=>{
+            return friends.includes(user._id.toString())
+        })
+
+        console.log(friendsdetail,"at repo")
+        if(friendsdetail){
+            return friendsdetail
+        }
+        else{
+            return "No friends found"
+        }
+    }
+    catch(e){
+        console.log(e)
+        throw e
+    }
+}
+
+export const searchPeople = async(name:any)=>{
+    try{
+        
+
+        const users = await User.find({})
+        .sort({
+            _id:-1
+        })
+
+        const filterUsers = users?.filter((user:any)=>{
+            return user.userName.includes(name)
+        })
+
+
+        if(filterUsers){
+            return filterUsers
+        }
+        else{
+            return "No users found"
+        }
     }
     catch(e){
         console.log(e)
