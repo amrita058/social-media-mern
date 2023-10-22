@@ -1,6 +1,6 @@
 import {useDispatch, useSelector} from 'react-redux'
 import { clickedPost } from '../../features/slice'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import CommentPostModal from '../Model/CommentPost'
 // import axios from 'axios'
 // import { toast } from 'react-toastify'
@@ -9,42 +9,25 @@ const Posts =(props:any)=>{
     // const token = localStorage.getItem('token')
     const dispatch = useDispatch()
     const [showCommentForm,setshowCommentForm] = useState(false)
-    // const [posts, setPosts] = useState<any>([])
+    const [like, setLike] = useState(false)
 
-
+    const user = useSelector((state:any)=>{
+        return state.user
+      })
     const theme = useSelector((state:any)=>{
         return state.theme.dark
-      })
+    })
 
-    // const user = useSelector((state:any)=>{
-    //     // console.log("at drop down",state.user)
-    //     return state.user
-    // })
+    useEffect(()=>{
+        if(props){
+            setLike(props.post.likes.includes(user._id))
+        }
+    },[props])
 
-    // useEffect(()=>{
-    //     const fetch = async()=>{
-    //         console.log(user._id)
-    //         await axios.get(`http://localhost:7000/api/posts/user/${user._id}`,{
-    //             headers:{
-    //                 Authorization: `${token}`
-    //             }
-    //         })
-    //         .then((res)=>{
-    //             console.log("posts data only",res.data)
-    //             setPosts(res.data)
-    //         })
-    //         .catch((err)=>{
-    //             console.log(err)
-    //             // toast.error("Unable to fetch any posts")
-    //         })
-    //     }
-    //     fetch()
-    // },[user])
 
     const onClose =()=>{
         setshowCommentForm(false)
-      }
-
+    }
     return(
         <>
             <div>
@@ -70,9 +53,10 @@ const Posts =(props:any)=>{
                     <div className='ml-12'>
                         <img src={props.post.photo} className='w-full'/>
                     </div>
+                    <div className={`ml-12 h-[0.8px] ${theme?'bg-[#6d6c6c]':'bg-[#b6b5b5]'} mt-5 `}></div>
                     <div className='flex ml-12 gap-4'>
-                        <button className={`flex-1 text-[12px] text-center ${theme?'bg-[#3a3a3a]':'bg-[#e9ebee]'} rounded-md mt-2 py-2 pl-1`} ><i className="fa-solid fa-heart mr-2 text-green-500"></i>Like</button>
-                        <button className={`flex-1 text-[12px] text-center ${theme?'bg-[#3a3a3a]':'bg-[#e9ebee]'} rounded-md mt-2 py-2 pl-1`} onClick={()=>{dispatch(clickedPost({id:props.post._id,userName:props.post.userId.userName,url:props.post.userId.url,content:props.post.content,photo:props.post.photo,date:'October 16'}));setshowCommentForm(true)}} ><i className="fa-solid fa-comment mr-2 text-yellow-500"></i>Comment</button>
+                        <button className={`flex-1 text-[16px] text-center group ${theme?'hover:bg-[#3a3a3a]':'hover:bg-[#efeff0]'} rounded-md mt-2 py-2 pl-1`} ><i className={`fa-solid fa-heart mr-2 group-hover:scale-150 group-hover:text-[#aa77f0] ${like?'text-[#aa77f0]':''} `}></i>Like</button>
+                        <button className={`flex-1 text-[16px] text-center group ${theme?'hover:bg-[#3a3a3a]':'hover:bg-[#efeff0]'} rounded-md mt-2 py-2 pl-1`} onClick={()=>{dispatch(clickedPost({id:props.post._id,userName:props.post.userId.userName,url:props.post.userId.url,content:props.post.content,photo:props.post.photo,date:'October 16'}));setshowCommentForm(true)}} ><i className="fa-solid fa-comment mr-2 group-hover:scale-150 group-hover:text-[#aa77f0]"></i>Comment</button>
                     </div>
                 </div>
             {/* })} */}

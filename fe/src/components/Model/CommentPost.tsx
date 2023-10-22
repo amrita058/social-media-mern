@@ -34,7 +34,7 @@ const CommentPostModal: React.FC<CommentModalProps> = ({onClose}) => {
     const {
         register,
         handleSubmit,
-        // reset,
+        reset,
         // watch,
         // formState: { errors },
     } = useForm<CommentPostParams>({resolver:zodResolver(CommentPostSchema)});
@@ -69,6 +69,7 @@ const CommentPostModal: React.FC<CommentModalProps> = ({onClose}) => {
         toast.success("Success",{theme:theme?"dark":"light"})
         const addComment = [res.data]
         setComments((prevComments:any) => [ ...addComment,...prevComments])
+        reset()
         // onClose()
       })
       .catch(error=>{console.log(error)
@@ -123,7 +124,7 @@ const CommentPostModal: React.FC<CommentModalProps> = ({onClose}) => {
                         
                       </div>
 
-                      <div className='overflow-y-auto h-80 w-full my-3 px-4'>
+                      <div className={`overflow-y-auto h-80 w-full my-3 px-4 scrollbar-thin ${theme?'scrollbar-thumb-[#aa77f0] scrollbar-track-[#3d3d3d]':'scrollbar-thumb-[#aa77f0] scrollbar-track-[#f3f2f2]'}   overflow-x-hidden`}>
                         <div className='py-2 text-left w-full'>
                             <p>{postInfo.content}</p>
                         </div>

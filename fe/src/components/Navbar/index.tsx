@@ -8,15 +8,18 @@ import Dropdown from '../Dropdown/index';
 import axios from 'axios';
 import {z} from "zod"
 import { SearchUserSchema } from '../../types/type';
+import { toast } from 'react-toastify';
+import { zodResolver } from '@hookform/resolvers/zod';
 
 const Navbar = () => {
+    type SearchParams = z.infer<typeof SearchUserSchema>
+
   const token = localStorage.getItem('token')
   const dispatch = useDispatch()
   const location = useLocation()
   const navigate = useNavigate()
-  const { register, handleSubmit } = useForm();
+  const { register, handleSubmit } = useForm<SearchParams>({resolver:zodResolver(SearchUserSchema)});
 
-  type SearchParams = z.infer<typeof SearchUserSchema>
   
   const theme = useSelector((state:any)=>{
     return state.theme.dark
@@ -33,9 +36,13 @@ const Navbar = () => {
         Authorization:`${token}`
       }
     })
-    .then(res=>{console.log(res.data)})
+    .then(res=>{
+      console.log(res.data)
+      navigate(`/search/user?name=${data.query}`)
+    })
+    .catch(err=>toast.error(err.message))
     // onSearch(data.query);
-    navigate(`/search/user?name=${data.query}`)
+    
   };
 
   const handleKeyDown = (e:any) => {

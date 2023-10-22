@@ -214,6 +214,23 @@ export const getFriends = async(requestid:string,page:number,limit:number)=>{
     }
 }
 
+export const suggestFriends = async(userId:string)=>{
+    try{
+        const checkSuggestion = await UserRepository.suggestFriends(userId)
+        // console.log(checkRequest)
+        if(checkSuggestion){
+            return checkSuggestion
+        }
+        else{
+            return "No suggestions found"
+        }
+    }
+    catch(e){
+        console.log(e)
+        throw e
+    }
+}
+
 export const searchPeople = async(name:any)=>{
     try{
         const checkRequest = await UserRepository.searchPeople(name)

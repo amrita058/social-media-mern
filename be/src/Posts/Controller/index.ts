@@ -61,3 +61,14 @@ export const deleteComments = async (req:Request,res:Response)=>{
         throw e
     }
 }
+
+export const likePost = async (req:Request,res:Response)=>{
+    try{
+        // console.log(req.body.comment)
+        res.status(201).json(await PostService.likePost(req.params.id,req.user._id))
+    }
+    catch(e){
+        console.log(e)
+        throw e
+    }
+}

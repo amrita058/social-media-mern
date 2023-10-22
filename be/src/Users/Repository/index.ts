@@ -146,9 +146,10 @@ export const friendRequest = async(request:friendRequestParams)=>{
         const requestFrom_id = new ObjectId(request.requestFrom)
         const requestTo_id = new ObjectId(request.requestTo)
         // console.log("body at repo",request)
-        const checkRequest = await FriendRequest.findOne({requestFrom:requestFrom_id,requestTo:requestTo_id})
-        // console.log("request from db",checkRequest)
-        if(checkRequest){
+        const checkSendRequest = await FriendRequest.findOne({requestFrom:requestFrom_id,requestTo:requestTo_id})
+        const checkReceivedRequest = await FriendRequest.findOne({requestFrom:requestTo_id,requestTo:requestFrom_id})
+        console.log("request from db",checkSendRequest,checkReceivedRequest)
+        if(checkSendRequest || checkReceivedRequest){
             throw Error("Friend request already sent")
         }
         else{
@@ -209,7 +210,11 @@ export const approveFriendRequest = async(requestid:string,status:string)=>{
                 const friend = await User.findById(checkRequest.requestFrom)
                 friend.friends.push(checkRequest.requestTo)
                 await friend.save()
-                // console.log("user and friend",user,friend)
+                return updateRequest
+            }
+            else{
+                const deleteRequest = await FriendRequest.findByIdAndDelete(id)
+                return deleteRequest
             }
         }
     }
@@ -272,10 +277,24 @@ export const getFriends = async(requestid:string,page:number,limit:number)=>{
     }
 }
 
+export const suggestFriends = async(userId:string)=>{
+    try{
+        let suggest:any = {}
+        suggest._id = {$ne:userId}
+        suggest.friends = {$nin:userId}
+        const result = await User.find(suggest)
+                        .select("userName fullName url  email")
+        console.log(result)
+        return result
+    }
+    catch(e){
+        console.log(e)
+        throw e
+    }
+}
+
 export const searchPeople = async(name:any)=>{
     try{
-        
-
         const users = await User.find({})
         .sort({
             _id:-1

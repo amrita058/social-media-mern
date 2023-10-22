@@ -65,7 +65,7 @@ export const getPost = async(id:string)=>{
             return friends.includes(post.userId._id.toString())
         })
 
-        console.log("all post list",friendposts.length)
+        // console.log("all post list",friendposts.length)
         return friendposts
     }
     catch(error){
@@ -88,7 +88,7 @@ export const postComments = async(postId:string,userId:any,comment:string)=>{
         .sort({
             _id: -1
             })
-        console.log("reached here",addedComment)
+        // console.log("reached here",addedComment)
         return addedComment
     }
     catch(error){
@@ -120,7 +120,6 @@ export const getComments = async(postId:string)=>{
     }
 }
 
-
 export const deleteComments = async(commentId:string)=>{
     try{
         console.log("get post repo")
@@ -141,3 +140,32 @@ export const deleteComments = async(commentId:string)=>{
         throw error
     }
 }
+
+export const likePost = async(postId:string,userId:any)=>{
+    try{
+        const postID = new ObjectId(postId)
+        const userID = new ObjectId(userId)
+        const checkPost = await Post.findById(postID)
+        const checkUser = await User.findById(userID)
+        // console.log("here here",postID,userID)
+        if(checkUser && checkPost){
+            const index = checkPost.likes.findIndex((id:any)=> id===userId)
+            if(index ===-1){
+                checkPost.likes.push(userId)
+                console.log("here here",checkPost)
+            }
+            else{
+                checkPost.likes = checkPost.likes.filter((id:any)=> id !==userId) 
+            }
+            const updatePost = await Post.findByIdAndUpdate(postID,checkPost,{new:true})
+            return updatePost
+        }
+        else{
+            throw Error("Post not found")
+        }
+    }
+    catch(error){
+        console.log(error)
+        throw error
+    }
+  }

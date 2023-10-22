@@ -43,6 +43,6 @@ export const CommentPostSchema = z.object({
 })
 
 export const SearchUserSchema = z.object({
-    comment:z.string().refine((value) => value.trim() !== '', {
+    query:z.string().refine((value) => value.trim() !== '', {
         message: 'Enter some content'})
 })

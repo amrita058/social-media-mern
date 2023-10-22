@@ -58,3 +58,13 @@ export const deleteComments = async(commentId:string)=>{
     console.log("error in file upload",e)
   }
 }
+
+export const likePost = async(postId:string,userId:any)=>{
+  try{
+    // console.log("validate data",validateData)
+    return await PostRepository.likePost(postId,userId)
+ 
+  }catch(e){
+    console.log("error in file upload",e)
+  }
+}

@@ -133,6 +133,17 @@ export const getFriends = async(req:Request,res:Response)=>{
     }
 }
 
+export const suggestFriends = async(req:Request,res:Response)=>{
+    try{
+        console.log("reached here at controller",req.params.id,req.query)
+        res.status(201).json(await UserService.suggestFriends(req.user))
+    }
+    catch(e){
+        console.log(e)
+        res.status(500).json(e)
+    }
+}
+
 export const searchPeople = async(req:Request,res:Response)=>{
     try{
         console.log("reached here at controller",req.query)

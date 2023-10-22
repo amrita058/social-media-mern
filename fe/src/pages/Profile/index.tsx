@@ -108,9 +108,9 @@ const Profile = () => {
                     {/* <div className="h-[0.8px] bg-[#444444] mx-4"></div> */}
                     <div className={`h-[0.8px] ${theme?'bg-[#444343]':'bg-[#d1d0d0]'}`}></div>
                     <div className={`flex ${theme?'text-[#c3c3fc]':'text-[#232323]'} justify-center text-2xl px-4 py-1 lg:px-5 lg:py-5`}>
-                      <div className="text-[1.05rem]">📹 100 Posts</div>
-                       <div className="text-[1.75rem] px-3">|</div>
-                      <div className="text-[1.05rem]">🤷‍♂️ 300 Friends</div>
+                      {/* <div className="text-[1.05rem]">📹 100 Posts</div> */}
+                       {/* <div className="text-[1.75rem] px-3">|</div> */}
+                      <div className="text-[1.05rem]">🤷‍♂️ {user.friends.length} Friends</div>
                       {/* <div className="flex gap-1 items-center text-sm "><i className="fa-solid fa-clipboard bg-transparent text-[#44df78] shadow-[#44df78] shadow-md"></i>200 Posts</div> */}
                       {/* <div className="flex gap-1 items-center text-sm"><i className="fa-solid fa-user-group bg-transparent text-[#44df78] shadow-[#44df78] shadow-md"></i>300 Friends</div> */}
                     </div>

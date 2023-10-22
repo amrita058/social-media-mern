@@ -1,15 +1,29 @@
+import { useEffect, useState } from "react"
 import { useSelector } from "react-redux"
 import { Link } from "react-router-dom"
 
 
 const FriendsCard =(props:any)=>{
+    const [mutualCount, setMutualCount] = useState(0)
     const theme = useSelector((state:any)=>{
         return state.theme.dark
-      })
+    })
+
+    const user = useSelector((state:any)=>{
+        return state.user
+    })
+
+    useEffect(()=>{
+        if(user){
+            const mutualFriend = user.friends.filter((friend:any)=> props.friend.friends.includes(friend))
+            console.log("mutual friend here",mutualFriend)
+            setMutualCount(mutualFriend.length)
+        }
+    },[user])
     return(
         <div className="pt-10 mb-3">
             <div
-            className={`pt-20 pb-4 px-2 shadow-2xl shadow-black/[0.2] rounded-3xl text-center flex flex-col justify-center max-w-[16rem] ${theme?'bg-[#2f2f2f] text-white':'bg-[#efeeee] text-[#232323]'} `}>
+            className={`pt-20 pb-4 px-6 shadow-2xl shadow-black/[0.2] rounded-3xl text-center flex flex-col justify-center max-w-[16rem] ${theme?'bg-[#2f2f2f] text-white':'bg-[#efeeee] text-[#232323]'} `}>
             <div className="select-none">
                 <img src={props.friend.url}
                     className={`shadow-2xl shadow-black/[0.2] rounded-3xl h-32 w-32 mx-auto -mt-32 transform-gpu transition-all hover:scale-110`}/>
@@ -19,8 +33,12 @@ const FriendsCard =(props:any)=>{
                 {props.friend.userName}
             </h1>
 
-            <p className={`${theme?'text-[#d7d6d6]':' text-[#545454]'} mt-2`}>
-                📹 100 Posts | 🤷‍♂️ {props.friend.friends.length} Friends
+            <h1 className={`text-sm font-bold ${theme?'text-[#d7d6d6]':'text-[#545454]'}`}>
+                {props.friend.email}
+            </h1>
+
+            <p className={`${theme?'text-[#d7d6d6]':' text-[#545454]'} mt-3`}>
+                👨‍👩‍👧‍👦 {mutualCount} Mutual Friends
             </p>
 
             <div className="mt-6 flex justify-center">

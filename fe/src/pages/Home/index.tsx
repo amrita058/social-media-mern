@@ -10,6 +10,8 @@ const Home = () => {
   const token = localStorage.getItem('token')
   const [showPostForm,setshowPostForm] = useState(false)
   const [posts, setPosts] = useState<any>([])
+  const [postCount,setPostCount] = useState(0)
+  const [suggestion,setSuggestion] = useState([])
 
   const theme = useSelector((state:any)=>{
     return state.theme.dark
@@ -23,6 +25,7 @@ const Home = () => {
     setshowPostForm(false)
   }
 
+  // GET POSTS
   useEffect(()=>{
     const fetch = async()=>{
         console.log(user._id)
@@ -43,6 +46,36 @@ const Home = () => {
     fetch()
 },[user])
 
+// COUNT POSTS
+  useEffect(()=>{
+    if(user){
+        const currentUserPost = posts.filter((post:any)=> post.userId._id.includes(user._id)) 
+        // console.log("current post length",currentUserPost.length)
+        setPostCount(currentUserPost.length)
+    }
+  },[user,posts])
+
+  // SUGGEST FRIEND
+  useEffect(()=>{
+    const fetch = async()=>{
+        console.log(user._id)
+        await axios.get(`http://localhost:7000/api/user/suggest-friends`,{
+            headers:{
+                Authorization: `${token}`
+            }
+        })
+        .then((res)=>{
+            console.log("suggest data only",res.data)
+            setSuggestion(res.data)
+        })
+        .catch((err)=>{
+            console.log(err)
+            // toast.error("Unable to fetch any posts")
+        })
+    }
+    fetch()
+},[user])
+
   return (
     <div className='min-h-screen'>
     <div className='pt-16'>
@@ -50,7 +83,15 @@ const Home = () => {
 
       {/* LEFT SIDE CONTENT OF HOME */}
       <div className='w-[25%] text-center fixed left-0 pl-8 hidden md:block'>
-        <Bio/>
+        <Bio postsCount={postCount}/>
+        <div className='mb:5 lg:mb-8'></div>
+        <div>
+          {suggestion && suggestion.map((friend,idx)=>{
+            return<div key={idx}>
+              <Contacts friend={friend} title="Suggestions"/>
+            </div>
+          })}
+        </div>
         {/* <MouseTracking/> */}
       </div>
 
@@ -81,7 +122,9 @@ const Home = () => {
       {/* <Posts/> */}
 
       {/* RIGHT SIDE CONTENT OF HOME */}
-      <div className='w-[25%] text-center fixed right-0 pr-8 hidden md:block'><Contacts/></div>
+      <div className='w-[25%] text-center fixed right-0 pr-8 hidden md:block'>
+        <Contacts title="New Notifications"/>
+      </div>
     </div>
   </div>
   </div>

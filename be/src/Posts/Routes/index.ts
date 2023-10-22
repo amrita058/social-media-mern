@@ -13,6 +13,7 @@ const routes = () => {
     router.post("/posts/:id/comments",verifyJwt,PostController.postComments)
     router.get("/posts/:id/comments",verifyJwt,PostController.getComments)
     router.delete("/posts/:id/comments",verifyJwt,PostController.deleteComments)
+    router.post("/posts/:id/like",verifyJwt,PostController.likePost)
     return router;
 }
 
