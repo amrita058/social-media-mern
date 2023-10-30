@@ -81,7 +81,7 @@ export const friendPost = async (req:Request,res:Response)=>{
 
 export const friendRequest = async (req:Request,res:Response)=>{
     try{
-        console.log("reached here at controller",req.body,req.query)
+        console.log("reached here at controller",req.body)
         res.status(201).json(await UserService.friendRequest(req.body))
     }
     catch(e){

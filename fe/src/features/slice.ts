@@ -77,10 +77,27 @@ export const postInfoSlice = createSlice({
     }
 })
 
+
+// SEARCH QUERY
+const initialquery = ""
+export const querySlice = createSlice({
+    name:"query",
+    initialState:initialquery,
+    reducers:{
+        changeQuery:(state,action)=>{
+            console.log("action here",action.payload)
+            state =  action.payload
+            // console.log("state here",state)
+            return state
+        }
+    }
+})
+
 export const {showAuthenticate,authenticate,unauthenticate} = authSlice.actions
 export const {changeTheme} = themeSlice.actions
 export const {changeDrop} = dropSlice.actions
 export const {changeUser} = userInfoSlice.actions
 export const {clickedPost} = postInfoSlice.actions
+export const {changeQuery} = querySlice.actions
 
-export default {auth:authSlice.reducer,theme:themeSlice.reducer,drop:dropSlice.reducer,user:userInfoSlice.reducer,postInfo:postInfoSlice.reducer}
+export default {auth:authSlice.reducer,theme:themeSlice.reducer,drop:dropSlice.reducer,user:userInfoSlice.reducer,postInfo:postInfoSlice.reducer,query:querySlice.reducer}

@@ -145,7 +145,7 @@ export const friendRequest = async(request:friendRequestParams)=>{
     try{
         const requestFrom_id = new ObjectId(request.requestFrom)
         const requestTo_id = new ObjectId(request.requestTo)
-        // console.log("body at repo",request)
+        console.log("body at repo",requestFrom_id,requestTo_id)
         const checkSendRequest = await FriendRequest.findOne({requestFrom:requestFrom_id,requestTo:requestTo_id})
         const checkReceivedRequest = await FriendRequest.findOne({requestFrom:requestTo_id,requestTo:requestFrom_id})
         console.log("request from db",checkSendRequest,checkReceivedRequest)
@@ -155,8 +155,9 @@ export const friendRequest = async(request:friendRequestParams)=>{
         else{
             const newRequest = await new FriendRequest(request) 
             const insertedRequest = await newRequest.save()
+            return insertedRequest
         }
-        return "Request successfully sent"
+        
     }
     catch(e){
         console.log(e)

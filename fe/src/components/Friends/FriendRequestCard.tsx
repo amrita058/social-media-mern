@@ -1,11 +1,26 @@
 import { useSelector } from "react-redux"
 import { Link } from "react-router-dom"
+import {useEffect, useState} from "react"
 
 
 const FriendRequestCard =(props:any)=>{
+    const [mutualCount, setMutualCount] = useState(0)
+
     const theme = useSelector((state:any)=>{
         return state.theme.dark
-      })
+    })
+
+    const user = useSelector((state:any)=>{
+        return state.user
+    })
+
+    useEffect(()=>{
+        if(user){
+            const mutualFriend = user.friends.filter((friend:any)=> props.friend.requestFrom.friends.includes(friend))
+            console.log("mutual friend here",mutualFriend)
+            setMutualCount(mutualFriend.length)
+        }
+    },[user])
     
     return(
         <div className="pt-10 mb-3">
@@ -23,8 +38,8 @@ const FriendRequestCard =(props:any)=>{
                 {props.friend.requestFrom.userName}
             </h1>
 
-            <p className={`${theme?'text-[#d7d6d6]':' text-[#545454]'} mt-2 px-2`}>
-                📹 100 Posts | 🤷‍♂️ {props.friend.requestFrom.friends.length} Friends
+            <p className={`${theme?'text-[#d7d6d6]':' text-[#545454]'} mt-2 px-5`}>
+            👨‍👩‍👧‍👦 {mutualCount} Mutual Friends
             </p>
 
             <div className={`mt-6 flex flex-col rounded-b-md rounded-t-2xl shadow-xl p-1 hover:scale-105 ${theme?'bg-[#555555] shadow-[#000000]':'bg-[#ffffff] shadow-[#b8b7b7] text-[#545454]'}`}>

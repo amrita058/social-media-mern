@@ -39,7 +39,7 @@ const Friends = () => {
           Authorization: `${token}`
         }
       })
-        .then((res)=>{setFriends(res.data);console.log("request dta here",res.data)})
+        .then((res)=>{setFriends(res.data);console.log("friend dta here",res.data)})
         .catch(err=>console.log(err))
     }
     fetch()

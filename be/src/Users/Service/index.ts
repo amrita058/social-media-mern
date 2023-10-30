@@ -143,14 +143,15 @@ export const updateProfile = (user:Partial<registerParams>,file:any,id:any)=>{
 
 export const friendRequest = async(request:friendRequestParams)=>{
     try{
-        const validateData = FriendRequestSchema.safeParse(request)
-        if(!validateData.success){
-            const error = new CustomError("Invalid data",401)
-            throw error
-        }
-        else{
-            return await UserRepository.friendRequest(request)
-        }
+        // const validateData = FriendRequestSchema.safeParse(request)
+        // if(!validateData.success){
+        //     const error = new CustomError("Invalid data",401)
+        //     throw error
+        // }
+        // else{
+            console.log("here at friend request repo",request)
+        return await UserRepository.friendRequest(request)
+        // }
     }
     catch(e){
         console.log(e)

@@ -1,20 +1,18 @@
 import { Link, useNavigate} from 'react-router-dom'
 import {useSelector,useDispatch} from 'react-redux'
-import {changeDrop, changeTheme} from '../../features/slice';
+import {changeDrop, changeQuery, changeTheme} from '../../features/slice';
 import { useLocation } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import img from '../../assets/sslogo.png'
 import Dropdown from '../Dropdown/index';
-import axios from 'axios';
 import {z} from "zod"
 import { SearchUserSchema } from '../../types/type';
-import { toast } from 'react-toastify';
 import { zodResolver } from '@hookform/resolvers/zod';
 
 const Navbar = () => {
     type SearchParams = z.infer<typeof SearchUserSchema>
 
-  const token = localStorage.getItem('token')
+  // const token = localStorage.getItem('token')
   const dispatch = useDispatch()
   const location = useLocation()
   const navigate = useNavigate()
@@ -30,19 +28,8 @@ const Navbar = () => {
   }
 
   const onSubmit = (data:any) => {
-    console.log("query",data.query)
-    axios.get(`http://localhost:7000/api/user/search?name=${data.query}`,{
-      headers:{
-        Authorization:`${token}`
-      }
-    })
-    .then(res=>{
-      console.log(res.data)
-      navigate(`/search/user?name=${data.query}`)
-    })
-    .catch(err=>toast.error(err.message))
-    // onSearch(data.query);
-    
+    dispatch(changeQuery(data.query))
+    navigate(`/search/user?name=${data.query}`)
   };
 
   const handleKeyDown = (e:any) => {

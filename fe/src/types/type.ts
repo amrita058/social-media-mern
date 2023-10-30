@@ -46,3 +46,8 @@ export const SearchUserSchema = z.object({
     query:z.string().refine((value) => value.trim() !== '', {
         message: 'Enter some content'})
 })
+
+export const FriendRequestSchema = z.object({
+    requestFrom: z.string(),
+    requestTo: z.string()
+})
