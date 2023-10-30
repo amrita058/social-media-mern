@@ -145,16 +145,17 @@ export const friendRequest = async(request:friendRequestParams)=>{
     try{
         const requestFrom_id = new ObjectId(request.requestFrom)
         const requestTo_id = new ObjectId(request.requestTo)
-        console.log("body at repo",requestFrom_id,requestTo_id)
+        // console.log("body at repo",requestFrom_id,requestTo_id)
         const checkSendRequest = await FriendRequest.findOne({requestFrom:requestFrom_id,requestTo:requestTo_id})
         const checkReceivedRequest = await FriendRequest.findOne({requestFrom:requestTo_id,requestTo:requestFrom_id})
-        console.log("request from db",checkSendRequest,checkReceivedRequest)
+        // console.log("request from db",checkSendRequest,checkReceivedRequest)
         if(checkSendRequest || checkReceivedRequest){
             throw Error("Friend request already sent")
         }
         else{
             const newRequest = await new FriendRequest(request) 
             const insertedRequest = await newRequest.save()
+            // console.log("inserted request here",insertedRequest)
             return insertedRequest
         }
         
@@ -173,12 +174,12 @@ export const getFriendRequest = async(requestid:string,page:number,limit:number)
             path: "requestFrom",
             select: "userName fullName url email friends"
         })
-        .skip((page-1)*limit)
-        .limit(limit)
+        // .skip((page-1)*limit)
+        // .limit(limit)
         .sort({
             _id:-1
         })
-        console.log(checkRequest,"at repo")
+        // console.log(checkRequest,"at repo")
         if(checkRequest){
             return checkRequest
         }
@@ -196,14 +197,14 @@ export const approveFriendRequest = async(requestid:string,status:string)=>{
     try{
         const id = new ObjectId(requestid)
         const checkRequest = await FriendRequest.findById(id)
-        console.log("here at repo check request",checkRequest)
+        // console.log("here at repo check request",checkRequest)
         if(!checkRequest){
             return "No request found"
         }
         else{
             const updateRequest = await FriendRequest.findByIdAndUpdate({_id:id},{requestStatus:status})
             if(status==="Approved"){
-                console.log("user and friend",checkRequest.requestTo,checkRequest.requestFrom)
+                // console.log("user and friend",checkRequest.requestTo,checkRequest.requestFrom)
                 const user = await User.findById(checkRequest.requestTo)
                 user.friends.push(checkRequest.requestFrom)
                 await user.save()
@@ -248,7 +249,7 @@ export const viewProfile = async(userid:string)=>{
 
 export const getFriends = async(requestid:string,page:number,limit:number)=>{
     try{
-        console.log("get post repo")
+        // console.log("get post repo")
         const userId = new ObjectId(requestid)
         const user = await User.findById(userId)
         const friends = user.friends.toString().split(",") ?? []
@@ -264,7 +265,7 @@ export const getFriends = async(requestid:string,page:number,limit:number)=>{
             return friends.includes(user._id.toString())
         })
 
-        console.log(friendsdetail,"at repo")
+        // console.log(friendsdetail,"at repo")
         if(friendsdetail){
             return friendsdetail
         }

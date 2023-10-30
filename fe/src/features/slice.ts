@@ -44,6 +44,19 @@ export const dropSlice = createSlice({
     }
 })
 
+//NOTIFICATION FOR USER
+const initialNotification = {value:false}
+export const notificationSlice = createSlice({
+    name:"notify",
+    initialState:initialNotification,
+    reducers:{
+        changeNotify:(state,action)=>{
+            state =  {...state,value:action.payload}
+            return state
+        }
+    }
+})
+
 //LOGGED IN USER INFO
 const initialUser = {_id:'',userName:'',email:'',fullName:'',url:'', friends:[]}
 export const userInfoSlice = createSlice({
@@ -54,6 +67,28 @@ export const userInfoSlice = createSlice({
             // console.log("action here",action.payload)
             state =  {...state,...action.payload}
             // console.log("state here",state)
+            return state
+        }
+    }
+})
+
+// ADDED POST
+const addedPost:any = []
+export const postSlice = createSlice({
+    name:"post",
+    initialState:addedPost,
+    reducers:{
+        addPost:(state,action)=>{
+            if (Array.isArray(action.payload)) {
+                // return action.payload
+                return [...state,...action.payload]
+              } else {
+                state.unshift(action.payload)
+                return state
+              }
+        },
+        newPost:(state)=>{
+            state = []
             return state
         }
     }
@@ -70,7 +105,7 @@ export const postInfoSlice = createSlice({
             if(!action.payload.photo){
                 action.payload.photo=""
             }
-            state =  {...state,...action.payload}
+            state = {...state,...action.payload}
             // console.log("state here",state)
             return state
         }
@@ -96,8 +131,10 @@ export const querySlice = createSlice({
 export const {showAuthenticate,authenticate,unauthenticate} = authSlice.actions
 export const {changeTheme} = themeSlice.actions
 export const {changeDrop} = dropSlice.actions
+export const {changeNotify} = notificationSlice.actions
 export const {changeUser} = userInfoSlice.actions
 export const {clickedPost} = postInfoSlice.actions
+export const {addPost,newPost} = postSlice.actions
 export const {changeQuery} = querySlice.actions
 
-export default {auth:authSlice.reducer,theme:themeSlice.reducer,drop:dropSlice.reducer,user:userInfoSlice.reducer,postInfo:postInfoSlice.reducer,query:querySlice.reducer}
+export default {auth:authSlice.reducer,theme:themeSlice.reducer,drop:dropSlice.reducer,notify:notificationSlice.reducer,user:userInfoSlice.reducer,post:postSlice.reducer,postInfo:postInfoSlice.reducer,query:querySlice.reducer}

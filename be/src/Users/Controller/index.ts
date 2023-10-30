@@ -71,7 +71,7 @@ export const updateProfile = async (req:Request,res:Response)=>{
 export const friendPost = async (req:Request,res:Response)=>{
     try{
         // console.log("update profile controller",req.params)
-        console.log("body here",req.body)
+        // console.log("body here",req.body)
         res.status(201).json("Successfully reached post")
     }
     catch(e){
@@ -81,7 +81,7 @@ export const friendPost = async (req:Request,res:Response)=>{
 
 export const friendRequest = async (req:Request,res:Response)=>{
     try{
-        console.log("reached here at controller",req.body)
+        // console.log("reached here at controller",req.body)
         res.status(201).json(await UserService.friendRequest(req.body))
     }
     catch(e){
@@ -92,7 +92,7 @@ export const friendRequest = async (req:Request,res:Response)=>{
 
 export const getFriendRequest = async(req:Request,res:Response)=>{
     try{
-        console.log("reached here at controller",req.params.id,req.query)
+        // console.log("reached here at controller",req.params.id,req.query)
         res.status(201).json(await UserService.getFriendRequest(req.params.id,Number(req.query.page),Number(req.query.limit)))
     }
     catch(e){
@@ -103,6 +103,7 @@ export const getFriendRequest = async(req:Request,res:Response)=>{
 
 export const approveFriendRequest = async(req:Request,res:Response)=>{
     try{
+        console.log(req.body._id,req.body.status)
         res.status(201).json(UserService.approveFriendRequest(req.body._id,req.body.status))
     }
     catch(e){
@@ -113,7 +114,7 @@ export const approveFriendRequest = async(req:Request,res:Response)=>{
 
 export const viewProfile = async(req:Request,res:Response)=>{
     try{
-        console.log("reached here at controller",req.params.id)
+        // console.log("reached here at controller",req.params.id)
         res.status(201).json(await UserService.viewProfile(req.params.id))
     }
     catch(e){
@@ -124,7 +125,7 @@ export const viewProfile = async(req:Request,res:Response)=>{
 
 export const getFriends = async(req:Request,res:Response)=>{
     try{
-        console.log("reached here at controller",req.params.id,req.query)
+        // console.log("reached here at controller",req.params.id,req.query)
         res.status(201).json(await UserService.getFriends(req.params.id,Number(req.query.page),Number(req.query.limit)))
     }
     catch(e){
@@ -135,7 +136,7 @@ export const getFriends = async(req:Request,res:Response)=>{
 
 export const suggestFriends = async(req:Request,res:Response)=>{
     try{
-        console.log("reached here at controller",req.params.id,req.query)
+        // console.log("reached here at controller",req.params.id,req.query)
         res.status(201).json(await UserService.suggestFriends(req.user))
     }
     catch(e){
@@ -146,7 +147,7 @@ export const suggestFriends = async(req:Request,res:Response)=>{
 
 export const searchPeople = async(req:Request,res:Response)=>{
     try{
-        console.log("reached here at controller",req.query)
+        // console.log("reached here at controller",req.query)
         res.status(201).json(await UserService.searchPeople(req.query.name))
     }
     catch(e){

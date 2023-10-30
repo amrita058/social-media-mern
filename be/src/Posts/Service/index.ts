@@ -19,10 +19,10 @@ export const uploadPost = async (id:ObjectId,content:string,file:any)=>{
   }
 }
 
-export const getPost = async(id:string)=>{
+export const getPost = async(id:string,page:number,limit:number)=>{
   try{
     // console.log("validate data",validateData)
-    return await PostRepository.getPost(id)
+    return await PostRepository.getPost(id,page,limit)
  
   }catch(e){
     console.log("error in file upload",e)

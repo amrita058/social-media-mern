@@ -79,18 +79,22 @@ const ViewProfile =()=>{
                             </div> 
                             </>:
                             <>
-                            <div className="grid grid-col-3 w-[16rem] flex-wrap">
+                            <div className="flex  flex-wrap w-full">
                                 {posts.map((post:any,idx:number)=>{
                                     return(
-                                        <div key={idx}>
-                                            <img src = {post.photo}/>
+                                        <>
+                                        {post.photo?
+                                         <div key={idx} className="flex px-3 py-3 w-[16rem] h-[18rem]">
+                                         <img src = {post.photo} className="object-cover rounded-md"/>
                                         </div>
+                                        :<></>}
+                                        </>
+                                       
                                     )
                                 })}
                             </div>  
                             </>
                         }
-              
                     </div>  
                 </div>
             </div>

@@ -1,9 +1,12 @@
 import { useSelector } from "react-redux"
 import { Link } from "react-router-dom"
 import {useEffect, useState} from "react"
+import axios from "axios"
+import { toast } from "react-toastify"
 
 
 const FriendRequestCard =(props:any)=>{
+    const token = localStorage.getItem('token')
     const [mutualCount, setMutualCount] = useState(0)
 
     const theme = useSelector((state:any)=>{
@@ -14,6 +17,7 @@ const FriendRequestCard =(props:any)=>{
         return state.user
     })
 
+    // MUTUAL FRIENDS
     useEffect(()=>{
         if(user){
             const mutualFriend = user.friends.filter((friend:any)=> props.friend.requestFrom.friends.includes(friend))
@@ -21,6 +25,28 @@ const FriendRequestCard =(props:any)=>{
             setMutualCount(mutualFriend.length)
         }
     },[user])
+
+    const handleApprove =async(id:string)=>{
+        console.log("requested id here",id)
+        await axios.post('http://localhost:7000/api/approve-request',{_id:id,status:"Approved"},{
+            headers:{
+                Authorization:`${token}`
+            }
+        })
+        .then(res=>console.log(res.data))
+        .catch(err=>toast("Request failed"))
+    }
+
+    const handleDecline =async(id:string)=>{
+        console.log("requested id here",id)
+        await axios.post('http://localhost:7000/api/approve-request',{_id:id,status:"Declined"},{
+            headers:{
+                Authorization: `${token}`
+            }
+        })
+        .then(res=>console.log(res.data))
+        .catch(err=>toast("Request failed"))
+    }
     
     return(
         <div className="pt-10 mb-3">
@@ -43,13 +69,13 @@ const FriendRequestCard =(props:any)=>{
             </p>
 
             <div className={`mt-6 flex flex-col rounded-b-md rounded-t-2xl shadow-xl p-1 hover:scale-105 ${theme?'bg-[#555555] shadow-[#000000]':'bg-[#ffffff] shadow-[#b8b7b7] text-[#545454]'}`}>
-                <a href="#" className="font-semibold px-4 py-2 rounded-md flex items-center space-x-2 transform-gpu transition-all duration-200 hover:bg-green-400 active:scale-90">
+                <button className="font-semibold px-4 py-2 rounded-md flex items-center space-x-2 transform-gpu transition-all duration-200 hover:bg-green-400 active:scale-90" onClick={()=>handleApprove(props.friend._id)}>
                     <span>Accept</span>
-                </a>
+                </button>
                 <div className={`h-[0.8px] ${theme?'bg-[#444343]':'bg-[#d1d0d0]'} mt-1 mb-1`}></div>
-                <a href="#" className="font-semibold px-4 py-2 rounded-md flex items-center space-x-2 transform-gpu transition-all duration-200 hover:bg-red-400 active:scale-90">
+                <button className="font-semibold px-4 py-2 rounded-md flex items-center space-x-2 transform-gpu transition-all duration-200 hover:bg-red-400 active:scale-90" onClick={()=>handleDecline(props.friend._id)}>
                     <span>Decline</span>
-                </a>
+                </button>
             </div>
         </div>
         </div>

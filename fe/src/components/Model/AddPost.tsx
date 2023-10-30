@@ -3,9 +3,10 @@ import { useForm, SubmitHandler} from 'react-hook-form';
 import {z} from "zod"
 import axios from 'axios';
 import {toast } from 'react-toastify';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { AddPostSchema } from '../../types/type';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { addPost } from '../../features/slice';
 
 
 interface AddItemModalProps {
@@ -16,6 +17,8 @@ type AddPostParams = z.infer<typeof AddPostSchema>
 
 const AddItemModal: React.FC<AddItemModalProps> = ({onClose}) => {
   const token = localStorage.getItem("token")
+
+  const dispatch = useDispatch()
 
   const theme = useSelector((state:any)=>{
     return state.theme.dark
@@ -52,6 +55,7 @@ const AddItemModal: React.FC<AddItemModalProps> = ({onClose}) => {
           }})
         .then(res=>{console.log("Ack state",res.data)
           toast.success("Success",{theme:theme?"dark":"light"})
+          dispatch(addPost(res.data))
           onClose()
         })
         .catch(error=>{console.log(error)

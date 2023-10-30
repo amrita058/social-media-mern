@@ -20,8 +20,8 @@ export const uploadPost = async (req:Request,res:Response)=>{
 
 export const getPost = async (req:Request,res:Response)=>{
     try{
-        // console.log(req.params.id)
-        res.status(201).json(await PostService.getPost(req.params.id))
+        console.log("at post controller",req.params.id,req.query)
+        res.status(201).json(await PostService.getPost(req.params.id,Number(req.query.page),Number(req.query.limit)))
     }
     catch(e){
         console.log(e)

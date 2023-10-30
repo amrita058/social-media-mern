@@ -11,6 +11,7 @@ const Posts =(props:any)=>{
     const dispatch = useDispatch()
     const [showCommentForm,setshowCommentForm] = useState(false)
     const [like, setLike] = useState(false)
+    // const [loading,setLoading] = useState(true)
 
     const user = useSelector((state:any)=>{
         return state.user
@@ -42,6 +43,7 @@ const Posts =(props:any)=>{
 
     return(
         <>
+        {!props?<div className='mt-28 text-white'>Loading...</div>:<>
             <div>
             {showCommentForm?<CommentPostModal onClose={onClose}/>:<></>}
             </div>
@@ -73,6 +75,7 @@ const Posts =(props:any)=>{
                 </div>
             {/* })} */}
             </div>
+            </>}
         </>
     )
 }

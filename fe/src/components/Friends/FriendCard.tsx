@@ -21,6 +21,8 @@ const FriendsCard =(props:any)=>{
         }
     },[user])
     return(
+        <>
+        {props.friend?
         <div className="pt-10 mb-3">
             <div
             className={`pt-20 pb-4 px-6 shadow-2xl shadow-black/[0.2] rounded-3xl text-center flex flex-col justify-center max-w-[16rem] ${theme?'bg-[#2f2f2f] text-white':'bg-[#efeeee] text-[#232323]'} `}>
@@ -50,6 +52,8 @@ const FriendsCard =(props:any)=>{
             </div>
         </div>
         </div>
+        :<div className="mt-28 text-white">Loading..</div>}
+        </>
     )
 }
 

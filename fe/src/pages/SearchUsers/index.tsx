@@ -3,10 +3,12 @@ import {useSelector} from 'react-redux'
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { toast } from 'react-toastify';
+import FriendsSkeleton from "../../components/Skeleton/Friends";
 
 const SearchUsers = () => {
     const token = localStorage.getItem('token')
     const [searchUsers,setSearchUsers] = useState([])
+    const [loading,setLoading] = useState(true)
 
     const theme = useSelector((state:any)=>{
         return state.theme.dark
@@ -31,6 +33,7 @@ const SearchUsers = () => {
             .then(res=>{
               console.log(res.data)
               setSearchUsers(res.data)
+              setLoading(false)
             })
             .catch(err=>toast.error(err.message))
       }
@@ -44,17 +47,23 @@ const SearchUsers = () => {
           Authorization:`${token}`
         }
       })
-      .then(res=>toast.success("Request sent"))
+      .then(res=>{
+        toast.success("Request sent")
+        
+      }
+      )
       .catch(err=>{
         console.log(err)
         toast.error("You are already friends")
       })
     }
+
   return (
     <div className="flex gap-4 flex-wrap pt-20 px-3 sm:px-10">
       <div className="pt-10 mb-3 flex flex-wrap gap-5 justify-center items-center">
         {user?
         <>
+        {!loading?<>
         {searchUsers.map((searchUser:any,idx)=>{
             return <div key={idx} >
             <div
@@ -87,6 +96,7 @@ const SearchUsers = () => {
         </div>
             </div>
         })}
+        </>:<FriendsSkeleton/>}
         </>
         :<></>}
         </div>

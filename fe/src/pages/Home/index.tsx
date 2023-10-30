@@ -1,4 +1,4 @@
-import {useSelector} from 'react-redux'
+import {useDispatch, useSelector} from 'react-redux'
 import Bio from '../../components/Bio';
 import Contacts from '../../components/Contacts';
 import { useEffect, useState } from 'react';
@@ -6,20 +6,33 @@ import AddItemModal from '../../components/Model/AddPost';
 import Posts from '../../components/Post';
 import axios from 'axios';
 import { io } from 'socket.io-client';
+import 'react-loading-skeleton/dist/skeleton.css'
+import { addPost, newPost } from '../../features/slice';
+import PostSkeleton from '../../components/Skeleton/Post';
+import SuggestSkeleton from '../../components/Skeleton/Suggest';
+
 
 const Home = () => {
   const token = localStorage.getItem('token')
   const [showPostForm,setshowPostForm] = useState(false)
-  const [posts, setPosts] = useState<any>([])
   const [postCount,setPostCount] = useState(0)
   const [suggestion,setSuggestion] = useState([])
+  const [postLoading,setPostLoading] = useState(true)
+  const [suggestLoading,setSuggestLoading] = useState(true)
+  const [page,setPage] = useState(1)
 
+  const dispatch = useDispatch()
   const theme = useSelector((state:any)=>{
     return state.theme.dark
   })
 
   const user = useSelector((state:any)=>{
     return state.user
+  })
+
+  const posts = useSelector((state:any)=>{
+    console.log("post data from redux",state.post)
+    return state.post
   })
 
   const onClose =()=>{
@@ -29,15 +42,19 @@ const Home = () => {
   // GET POSTS
   useEffect(()=>{
     const fetch = async()=>{
-        console.log(user._id)
-        await axios.get(`http://localhost:7000/api/posts/user/${user._id}`,{
+        // console.log(user._id)
+        await axios.get(`http://localhost:7000/api/posts/user/${user._id}?page=${page}&limit=4`,{
             headers:{
                 Authorization: `${token}`
             }
         })
         .then((res)=>{
             console.log("posts data only",res.data)
-            setPosts(res.data)
+            if(page==1){
+              dispatch(newPost())
+            }
+            dispatch(addPost(res.data))
+            setPostLoading(false)
         })
         .catch((err)=>{
             console.log(err)
@@ -45,7 +62,8 @@ const Home = () => {
         })
     }
     fetch()
-},[user])
+},[user._id,page])
+
 
 // COUNT POSTS
   useEffect(()=>{
@@ -54,7 +72,7 @@ const Home = () => {
         // console.log("current post length",currentUserPost.length)
         setPostCount(currentUserPost.length)
     }
-  },[user,posts])
+  },[user._id,posts])
 
   // SUGGEST FRIEND
   useEffect(()=>{
@@ -67,6 +85,7 @@ const Home = () => {
         })
         .then((res)=>{
             console.log("suggest data only",res.data)
+            setSuggestLoading(false)
             setSuggestion(res.data)
         })
         .catch((err)=>{
@@ -75,7 +94,7 @@ const Home = () => {
         })
     }
     fetch()
-},[user])
+},[user._id])
 
   // NOTIFICATION
   useEffect(()=>{
@@ -90,6 +109,22 @@ const Home = () => {
     });
   },[])
 
+  const handleInfiniteScroll = async() =>{
+    try{
+      if(window.innerHeight + document.documentElement.scrollTop + 1 >= document.documentElement.scrollHeight){
+        setPage(prev=> prev + 1)
+      }
+    }
+    catch(err){
+      console.log(err)
+    }
+  }
+
+  useEffect(()=>{
+    window.addEventListener("scroll",handleInfiniteScroll)
+    return ()=> window.removeEventListener("scroll",handleInfiniteScroll)
+  },[])
+
   return (
     <div className='min-h-screen'>
     <div className='pt-16'>
@@ -100,17 +135,23 @@ const Home = () => {
         <Bio postsCount={postCount}/>
         <div className='mb:5 lg:mb-8'></div>
         <div>
+        {suggestLoading?<><SuggestSkeleton/></>:
+          <>
         <div className={` w-full bg-gradient-to-r from-[#d3bdfa] via-[#c7a6ff] to-[#aa77f0] border-t-[1px] border-[#aa77f0] rounded-md `}>
           <div className={`${theme?'bg-[#313131] text-[#e0dfdf]':'bg-[#e6e5e5] text-[#525252]'} mt-[6px] rounded-md px-3 pb-2`}>
             <h2 className='text-left p-3 text-lg'>Suggestions</h2>
-          {suggestion && suggestion.map((friend,idx)=>{
-            return<div key={idx}>
-              <div className={`h-[0.8px] ${theme?'bg-[#444343]':'bg-[#d1d0d0]'} mb-2 mt-2`}></div>
-              <Contacts friend={friend} title="Suggestions"/>   
-            </div>
-          })}
+          
+            {suggestion && suggestion.map((friend,idx)=>{
+              return<div key={idx}>
+                <div className={`h-[0.8px] ${theme?'bg-[#444343]':'bg-[#d1d0d0]'} mb-2 mt-2`}></div>
+                <Contacts friend={friend} title="Suggestions"/>   
+              </div>
+            })}
+          
           </div>
         </div>
+        </>
+          }
         </div>
         {/* <MouseTracking/> */}
       </div>
@@ -129,11 +170,18 @@ const Home = () => {
             </div>
         </div>
       </div>
-      {posts.map((post:any,index:number)=>{
+      {postLoading?<div className=''>
+      <PostSkeleton/>
+      <PostSkeleton/>
+      <PostSkeleton/>
+      <PostSkeleton/>
+      </div>:<>
+      {posts?posts.map((post:any,index:number)=>{
         return<div key={index}>
           <Posts post={post}/>
         </div>
-      })}
+      }):<></>}
+      </>}
       </div>
 
       {/* RIGHT SIDE CONTENT OF HOME */}

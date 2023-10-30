@@ -8,6 +8,7 @@ const postSchema = new mongoose.Schema({
     comments: [{type: Schema.Types.ObjectId, ref:'Comments'}]
 },{
     versionKey: false, 
+    timestamps: true
   },
   )
 

@@ -1,6 +1,6 @@
 import {useSelector,useDispatch} from 'react-redux'
 import {Link, useNavigate} from 'react-router-dom'
-import { changeDrop, changeUser, unauthenticate} from '../../features/slice';
+import { changeDrop, changeUser, newPost, unauthenticate} from '../../features/slice';
 
 const Dropdown = ()=>{
   const navigate = useNavigate()
@@ -26,6 +26,7 @@ const Dropdown = ()=>{
     localStorage.removeItem("auth")
     dispatch(unauthenticate())
     dispatch(changeUser({_id:'',userName:'',email:'',fullName:'',url:'', friends:[]}))
+    dispatch(newPost())
     navigate('/login')
   }
 

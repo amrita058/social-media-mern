@@ -3,13 +3,15 @@ import FriendsCard from '../../components/Friends/FriendCard';
 import { useEffect, useState } from 'react';
 import FriendRequestCard from '../../components/Friends/FriendRequestCard';
 import axios from 'axios';
+import FriendsSkeleton from '../../components/Skeleton/Friends';
 
 const Friends = () => {
-
   const token = localStorage.getItem('token')
   const [field, setField] = useState("friends")
   const [friendRequests, setFriendRequests] = useState([])
   const [friends, setFriends] = useState([])
+  const [friendLoading,setFriendLoading] = useState(true)
+  const [requestLoading,setRequestLoading] = useState(true)
 
   const theme = useSelector((state:any)=>{
     return state.theme.dark
@@ -26,7 +28,11 @@ const Friends = () => {
           Authorization: `${token}`
         }
       })
-        .then((res)=>{setFriendRequests(res.data);console.log("request dta here",res.data)})
+        .then((res)=>{
+          setFriendRequests(res.data);
+          setRequestLoading(false)
+          console.log("request dta here",res.data)
+        })
         .catch(err=>console.log(err))
     }
     fetch()
@@ -39,7 +45,11 @@ const Friends = () => {
           Authorization: `${token}`
         }
       })
-        .then((res)=>{setFriends(res.data);console.log("friend dta here",res.data)})
+        .then((res)=>{
+          setFriends(res.data);
+          setFriendLoading(false)
+          console.log("friend dta here",res.data)
+        })
         .catch(err=>console.log(err))
     }
     fetch()
@@ -64,20 +74,37 @@ const Friends = () => {
           <div className="py-5 pr-10">
             {(field==='friends')?
               <div className='flex flex-wrap gap-3 justify-evenly lg:justify-start'>
-                {friends.map((friend,idx)=>{
-                  return(
-                  <div key={idx}>
-                    <FriendsCard friend={friend} />
-                  </div>)
-                })}
+                {!friendLoading?
+                <>
+                {friends.length===0?<p>Search users and send request to add friends</p>:<>
+                  {friends.map((friend,idx)=>{
+                    return(
+                    <div key={idx}>
+                      <FriendsCard friend={friend} />
+                    </div>
+                  )})}
+                </>}
+                </>
+                :<div className='flex flex-wrap gap-3 justify-evenly lg:justify-start'>
+                  <div><FriendsSkeleton/></div>
+                  <div><FriendsSkeleton/></div>
+                  <div><FriendsSkeleton/></div>
+                  <div><FriendsSkeleton/></div>
+                  <div><FriendsSkeleton/></div>
+                </div>
+              }
               </div>:
               <div className='flex flex-wrap gap-3 justify-evenly lg:justify-start'>
-                {friendRequests.map((friend,idx)=>{
-                  return(
-                  <div key={idx}>
-                    <FriendRequestCard friend={friend} />
-                  </div>)
-                })}
+                {!requestLoading?<>
+                  {friendRequests.length===0?<p className={`${theme?'text-[#bcbbbb]':'text-[#1d1d1d]'}`}>No new friend requests</p>:<>
+                    {friendRequests.map((friend,idx)=>{
+                      return(
+                      <div key={idx}>
+                        <FriendRequestCard friend={friend} />
+                      </div>)
+                    })}
+                  </>}
+                </>:<FriendsSkeleton/>}
               </div>
             }
           </div>

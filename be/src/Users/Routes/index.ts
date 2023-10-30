@@ -21,7 +21,7 @@ const routes = () => {
     router.post('/forgetpassword',UserController.forgetPassword)
     router.post('/resetpassword',verifyJwt,UserController.resetPassword)
     router.post('/auth',verifyJwt,UserController.authUser)
-    router.post('/user/:id',verifyJwt,upload.array('file'),UserController.updateProfile)
+    router.post('/user/:id',verifyJwt,upload.single('file'),UserController.updateProfile)
     router.get('/user/:id/profile',verifyJwt,UserController.viewProfile)
     router.post('/friend-request',verifyJwt,UserController.friendRequest)
     router.get('/user/:id/friend-request',verifyJwt,UserController.getFriendRequest)

@@ -137,10 +137,10 @@ const CommentPostModal: React.FC<CommentModalProps> = ({onClose}) => {
                             </>:<>
                             {comments.map((comment:any,idx:number)=>{
                               return<div key={idx}>
-                                <div className='w-full py-2 flex justify-between items-center px-1 rounded-md hover:bg-red-500 group'>
-                                  <p><img src={comment.userId.url} className={`w-8 h-8 mr-2 rounded-full inline-block`}/><span className='bg-red-500 px-3 py-2 rounded-2xl'>{comment.comment}</span></p>
+                                <div className={`w-full py-2 flex justify-between items-center px-1 rounded-md ${theme?'hover:bg-[#666666]':'hover:bg-black hover:bg-opacity-10'} group`}>
+                                  <p><img src={comment.userId.url} className={`w-8 h-8 mr-2 rounded-full inline-block`}/><span className={` px-3 py-2 rounded-2xl`}>{comment.comment}</span></p>
                                   {user.userName === comment.userId.userName?
-                                  <button className='text-md text-white items-center hidden group-hover:block' onClick={()=>handleCommentDelete(idx,comment._id)}><i className="fa-solid fa-trash-arrow-up"></i></button>:<></>
+                                  <button className={`${theme?'text-white':'text-[#232323]'}text-md items-center hidden group-hover:block`} onClick={()=>handleCommentDelete(idx,comment._id)}><i className="fa-solid fa-trash-arrow-up px-2"></i></button>:<></>
                                   }
                                   
                                 </div>

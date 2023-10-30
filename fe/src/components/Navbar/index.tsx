@@ -1,6 +1,6 @@
 import { Link, useNavigate} from 'react-router-dom'
 import {useSelector,useDispatch} from 'react-redux'
-import {changeDrop, changeQuery, changeTheme} from '../../features/slice';
+import {changeDrop, changeNotify, changeQuery, changeTheme} from '../../features/slice';
 import { useLocation } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import img from '../../assets/sslogo.png'
@@ -8,6 +8,7 @@ import Dropdown from '../Dropdown/index';
 import {z} from "zod"
 import { SearchUserSchema } from '../../types/type';
 import { zodResolver } from '@hookform/resolvers/zod';
+import Notifications from '../Notification';
 
 const Navbar = () => {
     type SearchParams = z.infer<typeof SearchUserSchema>
@@ -21,6 +22,10 @@ const Navbar = () => {
   
   const theme = useSelector((state:any)=>{
     return state.theme.dark
+  })
+
+  const notify = useSelector((state:any)=>{
+    return state.notify.value
   })
 
   const handleTheme =()=>{
@@ -40,7 +45,7 @@ const Navbar = () => {
 
   return (
   <div className={`fixed top-0 left-0 z-[99] w-full ${theme?'bg-[#1a1919] border-[#232323]':'bg-[#e9ebee] border-[#cdcdfc]'} border-b-[1px] `}>
-    <div className={`flex px-3 py-3 justify-between sm:px-5 items-center`}>
+    <div className={`flex flex-col sm:flex-row px-3 py-3 justify-between sm:px-5 items-center`}>
         <div className="flex gap-2 items-center">
           <div className="flex items-center">
             <Link to='/'>
@@ -71,9 +76,10 @@ const Navbar = () => {
           <div className={`${theme?'text-[#555555]':'text-[#757575]'} cursor-pointer`}>
             <i className={`fa-solid fa-star-and-crescent text-xl -rotate-45`} onClick={handleTheme}></i>
           </div>
-          <div className={`${theme?'text-[#555555]':'text-[#757575]'} cursor-pointer`}>
+          <button className={`${theme?'text-[#555555]':'text-[#757575]'} cursor-pointer`} onClick={()=>{dispatch(changeNotify(!notify))}}>
             <i className="fa-solid fa-bell text-xl"></i>
-          </div>
+          </button>
+            <Notifications/>
           <div>
             <Dropdown/>
           </div>

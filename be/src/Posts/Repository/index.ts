@@ -33,6 +33,7 @@ export const uploadPost = async(id:ObjectId,content:string,file:any)=>{
             .sort({
                 _id: -1
                 })
+                console.log("added post here",addedPost)
             return addedPost
         }
     }
@@ -43,9 +44,9 @@ export const uploadPost = async(id:ObjectId,content:string,file:any)=>{
 }
 
 // CURRENT USER WHOSE ID SEND + USERS FRIENDS POST RETURNED
-export const getPost = async(id:string)=>{
+export const getPost = async(id:string,page:number,limit:number)=>{
     try{
-        console.log("get post repo")
+        // console.log("get post repo")
         const userId = new ObjectId(id)
         const user = await User.findById(userId)
         const friends = user.friends.toString().split(",") ?? []
@@ -55,8 +56,8 @@ export const getPost = async(id:string)=>{
                     path: "userId",
                     select: "_id userName url fullName email"
                     })
-                    // .skip(1)
-                    // .limit(2)
+                    .skip((page-1)*limit)
+                    .limit(limit)
                     .sort({
                     _id: -1
                     })
@@ -122,8 +123,8 @@ export const getComments = async(postId:string)=>{
 
 export const deleteComments = async(commentId:string)=>{
     try{
-        console.log("get post repo")
-        console.log(commentId)
+        // console.log("delete comments repo")
+        // console.log(commentId)
         const Id = new ObjectId(commentId)
     
         const comment = await Comment.findById(Id)
