@@ -44,7 +44,7 @@ export const dropSlice = createSlice({
     }
 })
 
-//NOTIFICATION FOR USER
+//BELL ICON FOR USER
 const initialNotification = {value:false}
 export const notificationSlice = createSlice({
     name:"notify",
@@ -128,13 +128,36 @@ export const querySlice = createSlice({
     }
 })
 
+// ADDED NOTIFICATION
+const addedNotification:any = []
+export const notifySlice = createSlice({
+    name:"notification",
+    initialState:addedNotification,
+    reducers:{
+        addNotification:(state,action)=>{
+            if (Array.isArray(action.payload)) {
+                return action.payload
+                // return [...state,...action.payload]
+              } else {
+                state.unshift(action.payload)
+                return state
+              }
+        },
+        newNotification:(state)=>{
+            state = []
+            return state
+        }
+    }
+})
+
 export const {showAuthenticate,authenticate,unauthenticate} = authSlice.actions
 export const {changeTheme} = themeSlice.actions
 export const {changeDrop} = dropSlice.actions
 export const {changeNotify} = notificationSlice.actions
+export const {addNotification,newNotification} = notifySlice.actions
 export const {changeUser} = userInfoSlice.actions
 export const {clickedPost} = postInfoSlice.actions
 export const {addPost,newPost} = postSlice.actions
 export const {changeQuery} = querySlice.actions
 
-export default {auth:authSlice.reducer,theme:themeSlice.reducer,drop:dropSlice.reducer,notify:notificationSlice.reducer,user:userInfoSlice.reducer,post:postSlice.reducer,postInfo:postInfoSlice.reducer,query:querySlice.reducer}
+export default {auth:authSlice.reducer,theme:themeSlice.reducer,drop:dropSlice.reducer,notify:notificationSlice.reducer,notification:notifySlice.reducer,user:userInfoSlice.reducer,post:postSlice.reducer,postInfo:postInfoSlice.reducer,query:querySlice.reducer}

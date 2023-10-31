@@ -29,6 +29,8 @@ const routes = () => {
     router.get('/user/:id/friends',verifyJwt,UserController.getFriends)
     router.get('/user/suggest-friends',verifyJwt,UserController.suggestFriends)
     router.get('/user/search',verifyJwt,UserController.searchPeople)
+    router.get('/user/:id/notification',verifyJwt,UserController.getNotification)
+    router.put('/user/notification/:id',verifyJwt,UserController.updateNotification)
     return router;
 }
 

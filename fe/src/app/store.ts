@@ -7,6 +7,7 @@ export const store = configureStore({
         theme:allSlice.theme,
         drop:allSlice.drop,
         notify:allSlice.notify,
+        notification:allSlice.notification,
         user:allSlice.user,
         postInfo:allSlice.postInfo,
         query:allSlice.query,

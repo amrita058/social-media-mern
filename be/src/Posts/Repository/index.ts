@@ -3,6 +3,7 @@ import { env } from "../../config"
 const Post = require("../Models/index")
 const Comment = require("../Models/comments")
 const User = require("../../Users/Models/index")
+const Notification = require("../../Users/Models/notification")
 
 export const uploadPost = async(id:ObjectId,content:string,file:any)=>{
     try{
@@ -159,6 +160,8 @@ export const likePost = async(postId:string,userId:any)=>{
                 checkPost.likes = checkPost.likes.filter((id:any)=> id !==userId) 
             }
             const updatePost = await Post.findByIdAndUpdate(postID,checkPost,{new:true})
+            const newNotification = await new Notification({sender:userID,receiver:checkPost.userId,message:`${checkUser.userName} liked your post`})
+            await newNotification.save()
             return updatePost
         }
         else{

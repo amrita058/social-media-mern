@@ -3,8 +3,7 @@ import { clickedPost } from '../../features/slice'
 import { useEffect, useState } from 'react'
 import CommentPostModal from '../Model/CommentPost'
 import axios from 'axios'
-// import axios from 'axios'
-// import { toast } from 'react-toastify'
+import { io } from 'socket.io-client';
 
 const Posts =(props:any)=>{
     const token = localStorage.getItem('token')
@@ -31,13 +30,21 @@ const Posts =(props:any)=>{
         setshowCommentForm(false)
     }
 
-    const handleLike =async (id:string)=>{
+    const handleLike =async (id:string,receiver:string)=>{
         await axios.post(`http://localhost:7000/api/posts/${id}/like`,{},{
             headers:{
                 Authorization: `${token}`
             }
         })
-        .then(res=>{setLike(!like);console.log(res)})
+        .then(
+            res=>{
+            setLike(!like)
+            console.log(res)
+            const socket = io('http://localhost:7000')
+            console.log(socket)
+            const notify:string = `${user.userName} ${!like?'liked':'disliked'} ${receiver}`
+            socket?.emit("sendNotification",{user,receiver,notify})
+        })
         .catch(err=>console.log(err))
     }
 
@@ -58,7 +65,7 @@ const Posts =(props:any)=>{
                             <p className={`text-md w-full text-left rounded-md`}>
                                 {props.post.userId.userName}
                             </p>
-                            <p className='text-[10px]'>October 17</p>
+                            <p className='text-[10px]'>{new Date(props.post.createdAt).toLocaleString('en-US', {year: 'numeric',month: 'short',day: 'numeric',})}</p>
                         </div>
                     </div>
                     <div className='ml-12'>
@@ -69,7 +76,7 @@ const Posts =(props:any)=>{
                     </div>
                     <div className={`ml-12 h-[0.8px] ${theme?'bg-[#6d6c6c]':'bg-[#b6b5b5]'} mt-5 `}></div>
                     <div className='flex ml-12 gap-4'>
-                        <button className={`flex-1 text-[16px] text-center group ${theme?'hover:bg-[#3a3a3a]':'hover:bg-[#efeff0]'} rounded-md mt-2 py-2 pl-1`} onClick={()=>handleLike(props.post._id)}><i className={`fa-solid fa-heart mr-2 group-hover:scale-150 group-hover:text-[#aa77f0] ${like?'text-[#aa77f0]':''} `}></i>Like</button>
+                        <button className={`flex-1 text-[16px] text-center group ${theme?'hover:bg-[#3a3a3a]':'hover:bg-[#efeff0]'} rounded-md mt-2 py-2 pl-1`} onClick={()=>handleLike(props.post._id,props.post.userId.userName)}><i className={`fa-solid fa-heart mr-2 group-hover:scale-150 group-hover:text-[#aa77f0] ${like?'text-[#aa77f0]':''} `}></i>Like</button>
                         <button className={`flex-1 text-[16px] text-center group ${theme?'hover:bg-[#3a3a3a]':'hover:bg-[#efeff0]'} rounded-md mt-2 py-2 pl-1`} onClick={()=>{dispatch(clickedPost({id:props.post._id,userName:props.post.userId.userName,url:props.post.userId.url,content:props.post.content,photo:props.post.photo,date:'October 16'}));setshowCommentForm(true)}} ><i className="fa-solid fa-comment mr-2 group-hover:scale-150 group-hover:text-[#aa77f0]"></i>Comment</button>
                     </div>
                 </div>

@@ -31,7 +31,7 @@ const Home = () => {
   })
 
   const posts = useSelector((state:any)=>{
-    console.log("post data from redux",state.post)
+    // console.log("post data from redux",state.post)
     return state.post
   })
 
@@ -49,7 +49,7 @@ const Home = () => {
             }
         })
         .then((res)=>{
-            console.log("posts data only",res.data)
+            // console.log("posts data only",res.data)
             if(page==1){
               dispatch(newPost())
             }

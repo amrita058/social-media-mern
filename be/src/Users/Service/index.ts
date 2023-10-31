@@ -248,3 +248,22 @@ export const searchPeople = async(name:any)=>{
         throw e
     }
 }
+
+export const getNotification = async(userid:string)=>{
+    try{
+        return await UserRepository.getNotification(userid)
+    }
+    catch(e){
+        console.log(e)
+        throw e
+    }
+}
+
+export const updateNotification = (id:any)=>{
+    try{
+        return UserRepository.updateNotification(id)
+    }
+    catch(e){
+        console.log(e)
+    }
+}

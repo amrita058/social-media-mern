@@ -155,3 +155,23 @@ export const searchPeople = async(req:Request,res:Response)=>{
         res.status(500).json(e)
     }
 }
+
+export const getNotification = async(req:Request,res:Response)=>{
+    try{
+        // console.log("reached here at controller",req.params.id,req.query)
+        res.status(201).json(await UserService.getNotification(req.params.id))
+    }
+    catch(e){
+        console.log(e)
+        res.status(500).json(e)
+    }
+}
+
+export const updateNotification = async (req:Request,res:Response)=>{
+    try{
+        res.status(201).json(await UserService.updateNotification(req.params.id))
+    }
+    catch(e){
+        res.status(500).json(e)
+    }
+}

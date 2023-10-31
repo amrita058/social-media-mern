@@ -17,6 +17,8 @@ type CommentPostParams = z.infer<typeof CommentPostSchema>
 const CommentPostModal: React.FC<CommentModalProps> = ({onClose}) => {
     const token = localStorage.getItem("token")
     const [comments,setComments] = useState<any>([]) 
+    const [loading, setLoading] = useState(false)
+    const [commentloading,setCommentLoading] = useState(true)
 
     const theme = useSelector((state:any)=>{
         return state.theme.dark
@@ -47,8 +49,9 @@ const CommentPostModal: React.FC<CommentModalProps> = ({onClose}) => {
           }
         })
         .then(res=>{
-          console.log("comments here",res.data)
+          // console.log("comments here",res.data)
           setComments(res.data)
+          setCommentLoading(false)
         })
         .catch(err=>{
           console.log(err)
@@ -59,7 +62,8 @@ const CommentPostModal: React.FC<CommentModalProps> = ({onClose}) => {
 
     const onSubmit: SubmitHandler<CommentPostParams> = async (data,e) => {
       e?.preventDefault()
-      console.log("comment on enter",data.comment)
+      // console.log("comment on enter",data.comment)
+      setLoading(true)
       axios.post(`http://localhost:7000/api/posts/${postInfo.id}/comments`,data,{
         headers: {
           Authorization: `${token}`,
@@ -71,9 +75,10 @@ const CommentPostModal: React.FC<CommentModalProps> = ({onClose}) => {
         setComments((prevComments:any) => [ ...addComment,...prevComments])
         reset()
         // onClose()
-      })
+      }) 
       .catch(error=>{console.log(error)
       toast.error(error.message,{theme:theme?'dark':'light'})})
+      .finally(()=>setLoading(false))
     };
 
     const handleClick =(state:string)=>{
@@ -131,7 +136,9 @@ const CommentPostModal: React.FC<CommentModalProps> = ({onClose}) => {
                         <div className='w-full flex justify-center'>{postInfo.photo!=''?<img src={postInfo.photo} className='w-full'/>:<></>}</div>
                           <div className={`h-[0.8px] w-full ${theme?'bg-[#737373]':'bg-[#b6b5b5]'} my-3`}></div>
                         <div className='text-left w-full'>
-                          
+                        
+                        {!commentloading?
+                        <>
                           {comments.length===0?<>
                             Be the first one to comment
                             </>:<>
@@ -147,6 +154,8 @@ const CommentPostModal: React.FC<CommentModalProps> = ({onClose}) => {
                               </div> 
                             })}
                           </>}
+                          </>
+                          :<></>}
                         </div>
                       </div>
 
@@ -156,7 +165,7 @@ const CommentPostModal: React.FC<CommentModalProps> = ({onClose}) => {
                       <div className='flex gap-4 justify-between items-center py-2 px-3 w-full  shadow-2xl shadow-black'>
                         <img src={user.url} className='h-10 w-10 rounded-full'/>
                         <input type='text' placeholder='Comment' {...register('comment')} className={`${theme?'text-[#c4c3c3] bg-transparent border-2 border-[#555555]':'text-[#555555] border-2 border-[#a9a8a8]'} w-full focus:outline-none focus:border-[#aa77f0] p-2`} />
-                        <button type="submit" className={`text-3xl ${theme?' text-[#e0e0e0]':' text-[#7e7e7e]'} `}><i className="fa-solid fa-circle-chevron-right"></i></button>
+                        <button type="submit" className={`text-3xl ${theme?' text-[#e0e0e0]':' text-[#7e7e7e]'} `} disabled={loading}><i className="fa-solid fa-circle-chevron-right"></i></button>
                       </div> 
                     </section>
                   </div>

@@ -77,7 +77,7 @@ const AddItemModal: React.FC<AddItemModalProps> = ({onClose}) => {
     <>
         <div className="fixed top-0 left-0 min-h-screen w-full z-[100] flex justify-center items-center bg-black bg-opacity-80"  onClick={()=>handleClick("close")}></div>
         
-        <div className={`fixed left-0 top-0 sm:top-[30%] sm:left-[30%] z-[105] rounded-md shadow-2xl w-full sm:w-[40%] h-full ${theme?'shadow-[#3f3f3f]':'shadow-[#3b3b3b]'}`}>
+        <div className={`fixed left-0 top-0 sm:top-[30%] sm:left-[30%] z-[105] rounded-md shadow-2xl w-full sm:w-[40%] h-fit ${theme?'shadow-[#3f3f3f]':'shadow-[#3b3b3b]'}`}>
             <div className={`flex justify-between ${theme?'bg-[#3d3d3d] border-[#575757]':'bg-[#f3f2f2] border-[#b1b0b0]'}  rounded-t-lg p-1 `}>
                 <p className={`w-full ${theme?'text-[#aa77f0] bg-black bg-opacity-20 ':'text-[#aa77f0] bg-[#d2d1d1]'} font-semibold text-xl px-2 py-[2px] font-sans rounded-tl-lg`}>Craft a Post</p>
                 <button onClick={()=>onClose()} className={`${theme?'text-white bg-[#3d3d3d]':'bg-[#f3f2f2] text-[#232323]'} text-xl px-2 hover:bg-red-500 rounded-tr-lg`}><i className="fa-solid fa-xmark"></i></button>

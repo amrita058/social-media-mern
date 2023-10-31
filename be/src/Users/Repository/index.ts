@@ -6,6 +6,7 @@ import { FriendRequestSchema, UserLoginSchema, UserRegisterSchema } from "../../
 import { env } from "../../config"
 const User = require("../Models/index")
 const Post = require("../../Posts/Models/index")
+const Notification = require("../Models/notification")
 
 const FriendRequest = require("../Models/friendRequest.ts")
 import { CustomError } from "../../libs";
@@ -238,6 +239,10 @@ export const viewProfile = async(userid:string)=>{
                     _id: -1
                     })
         console.log(posts)
+        if(posts.length===0){
+            const user = await User.findOne({_id:new ObjectId(userid)})
+            return user
+        }
         return posts
     }
     catch(e){
@@ -316,6 +321,46 @@ export const searchPeople = async(name:any)=>{
     }
     catch(e){
         console.log(e)
+        throw e
+    }
+}
+
+export const getNotification = async(userid:string)=>{
+    try{
+        const userId = new ObjectId(userid)
+        const notifications = await Notification.find({receiver:userId})
+        .populate({
+            path: "sender",
+            select : "userName url"
+        })
+        .sort({
+            _id:-1
+        })
+        console.log("notification here",notifications)
+        const filteredNotifications = notifications.filter((notification:any) => 
+            !notification.sender._id.equals(notification.receiver)
+          );
+
+        console.log("filtered notifications",filteredNotifications)
+
+        return filteredNotifications
+    }
+    catch(e){
+        console.log(e)
+        throw e
+    }
+}
+
+export const updateNotification = async(id:any)=>{
+    try{
+        // const notification = database.collection('notification')
+        const check = await Notification.findOne({"_id":new ObjectId(id)})
+        if(check){
+            const update = await Notification.updateOne({"_id":new ObjectId(String(id))},{"$set": { "status":"Read"}})
+            return update
+        }
+    }
+    catch(e){
         throw e
     }
 }

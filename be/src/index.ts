@@ -27,9 +27,18 @@ const io = socketIo(server, {
 io.on("connection", (socket:any) => {
   io.emit("fromserver","Hello from server")
     console.log("someone connected",socket.id)
+
   socket.on('fromclient', (message:any) => {
     console.log('Received message from client:', message);
   })
+
+  socket.on('sendNotification',(data:any)=>{
+    // console.log('Received message from user:', data);
+    if(data.user.userName !== data.receiver){
+      io.emit('getNotification',data)
+    }
+  })
+
   socket.on("disconnect",()=>{
     console.log("someone has left")
   })

@@ -11,6 +11,7 @@ const ViewProfile =()=>{
     const [posts,setPosts] = useState<any>([])
     const [loading,setLoading] = useState(true)
     const [field,setField] = useState('posts')
+    const [flag,setFlag] = useState(true)
     const theme = useSelector((state:any)=>{
         return state.theme.dark
     })
@@ -29,6 +30,12 @@ const ViewProfile =()=>{
         .then(res=>{
             console.log(res.data)
             setPosts(res.data)
+            if(Array.isArray(res.data)){
+                setFlag(true)
+            }
+            else{
+                setFlag(false)
+            }
             setLoading(false)
         })
         .catch(err=>{console.log(err)})
@@ -44,6 +51,7 @@ const ViewProfile =()=>{
             {!loading?
             <div className="h-full w-full px-[5%] flex flex-col lg:flex-row">
                 {/* USER INFO */}
+                {flag?
                 <div className="w-full lg:w-[20%] flex lg:flex-col items-center justify-center lg:fixed">
                     <img src={posts[0].userId.url} className={`w-32 h-32 rounded-full border-2`}/>
                     
@@ -56,6 +64,20 @@ const ViewProfile =()=>{
                         </div>
                     </div>
                 </div>
+                :
+                <div className="w-full lg:w-[20%] flex lg:flex-col items-center justify-center lg:fixed">
+                    <img src={posts.url} className={`w-32 h-32 rounded-full border-2`}/>
+                    
+                    <div className={`w-full flex flex-col lg:items-center p-5 ${theme?'text-[#c0bfbf]':'text-[#474747]'}`}>
+                        <p className="text-2xl">{posts.userName}</p>
+                        <p className={`text-md ${theme?'text-[#c0bfbf]':'text-[#797878]'}  mb-[6px]`}>{posts.email}</p>
+                        <div className="pt-7 w-full flex flex-col lg:items-center">
+                            <p className='mb-2 text-start'>📹 0 Posts</p>
+                            <p className='text-start'>🤷‍♂️{posts.friends.length} Friends</p>
+                        </div>
+                    </div>
+                </div>
+                }
 
                 {/* POSTS */}
                 <div className={`lg:mt-[4rem] lg:ml-[25%] w-full bg-transparent`}>
@@ -69,6 +91,7 @@ const ViewProfile =()=>{
                             (field==='posts')?
                             <>
                             <div className="w-[90%] md:w-[38rem]">
+                            {!flag?<>No posts</>:<>
                             {posts.map((post:any,idx:number)=>{
                                 return(
                                     <div key={idx}>
@@ -76,10 +99,12 @@ const ViewProfile =()=>{
                                     </div>
                                 )
                             })}
+                            </>}
                             </div> 
                             </>:
                             <>
                             <div className="flex  flex-wrap w-full">
+                            {!flag?<>No photos</>:<>
                                 {posts.map((post:any,idx:number)=>{
                                     return(
                                         <>
@@ -92,6 +117,7 @@ const ViewProfile =()=>{
                                        
                                     )
                                 })}
+                            </>}
                             </div>  
                             </>
                         }
