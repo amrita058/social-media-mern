@@ -194,6 +194,26 @@ export const getFriendRequest = async(requestid:string,page:number,limit:number)
     }
 }
 
+
+export const getSentRequest = async(userid:string)=>{
+    try{
+        const id = new ObjectId(userid)
+        const checkRequest = await FriendRequest.find({requestFrom:id,requestStatus:"Pending"})
+        // console.log(checkRequest,"at repo")
+        if(checkRequest){
+            const sentRequestUsersList = checkRequest.map((user:any)=>user.requestTo)
+            return sentRequestUsersList
+        }
+        else{
+            return []
+        }
+    }
+    catch(e){
+        console.log(e)
+        throw e
+    }
+}
+
 export const approveFriendRequest = async(requestid:string,status:string)=>{
     try{
         const id = new ObjectId(requestid)
@@ -339,9 +359,9 @@ export const getNotification = async(userid:string)=>{
         console.log("notification here",notifications)
         const filteredNotifications = notifications.filter((notification:any) => 
             !notification.sender._id.equals(notification.receiver)
-          );
+        );
 
-        console.log("filtered notifications",filteredNotifications)
+        // console.log("filtered notifications",filteredNotifications)
 
         return filteredNotifications
     }

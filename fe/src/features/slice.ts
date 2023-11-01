@@ -90,7 +90,10 @@ export const postSlice = createSlice({
         newPost:(state)=>{
             state = []
             return state
-        }
+        },
+        deletePost: (state, action) => {
+            return state.filter((post:any) => post._id !== action.payload);
+        },
     }
 })
 
@@ -150,6 +153,32 @@ export const notifySlice = createSlice({
     }
 })
 
+//NOTIFICATION COUNT
+const initialCount = {count:0}
+export const countSlice = createSlice({
+    name:"count",
+    initialState:initialCount,
+    reducers:{
+        changeCount:(state,action)=>{
+            state.count =  action.payload
+            return state
+        }
+    }
+})
+
+//FRIEND REQUEST FETCH
+const initialFetch = {value:false}
+export const fetchSlice = createSlice({
+    name:"fetch",
+    initialState:initialFetch,
+    reducers:{
+        changeFetch:(state,action)=>{
+            state.value =  action.payload
+            return state
+        }
+    }
+})
+
 export const {showAuthenticate,authenticate,unauthenticate} = authSlice.actions
 export const {changeTheme} = themeSlice.actions
 export const {changeDrop} = dropSlice.actions
@@ -157,7 +186,9 @@ export const {changeNotify} = notificationSlice.actions
 export const {addNotification,newNotification} = notifySlice.actions
 export const {changeUser} = userInfoSlice.actions
 export const {clickedPost} = postInfoSlice.actions
-export const {addPost,newPost} = postSlice.actions
+export const {addPost,newPost,deletePost} = postSlice.actions
 export const {changeQuery} = querySlice.actions
+export const {changeCount} = countSlice.actions
+export const {changeFetch} = fetchSlice.actions
 
-export default {auth:authSlice.reducer,theme:themeSlice.reducer,drop:dropSlice.reducer,notify:notificationSlice.reducer,notification:notifySlice.reducer,user:userInfoSlice.reducer,post:postSlice.reducer,postInfo:postInfoSlice.reducer,query:querySlice.reducer}
+export default {auth:authSlice.reducer,theme:themeSlice.reducer,drop:dropSlice.reducer,notify:notificationSlice.reducer,notification:notifySlice.reducer,user:userInfoSlice.reducer,post:postSlice.reducer,postInfo:postInfoSlice.reducer,query:querySlice.reducer,count:countSlice.reducer,fetch:fetchSlice.reducer}

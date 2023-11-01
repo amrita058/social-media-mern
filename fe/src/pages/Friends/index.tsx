@@ -1,12 +1,14 @@
-import {useSelector} from 'react-redux'
+import {useDispatch, useSelector} from 'react-redux'
 import FriendsCard from '../../components/Friends/FriendCard';
 import { useEffect, useState } from 'react';
 import FriendRequestCard from '../../components/Friends/FriendRequestCard';
 import axios from 'axios';
 import FriendsSkeleton from '../../components/Skeleton/Friends';
+import { changeFetch } from '../../features/slice';
 
 const Friends = () => {
   const token = localStorage.getItem('token')
+  const dispatch = useDispatch()
   const [field, setField] = useState("friends")
   const [friendRequests, setFriendRequests] = useState([])
   const [friends, setFriends] = useState([])
@@ -21,6 +23,11 @@ const Friends = () => {
     return state.user
   })
 
+  const fetch = useSelector((state:any)=>{
+    // console.log("fetched value",state.fetch.value)
+    return state.fetch.value
+  })
+
   useEffect(()=>{
     const fetch =async()=>{
       await axios.get(`http://localhost:7000/api/user/${user._id}/friend-request`,{
@@ -31,12 +38,13 @@ const Friends = () => {
         .then((res)=>{
           setFriendRequests(res.data);
           setRequestLoading(false)
-          console.log("request dta here",res.data)
+          dispatch(changeFetch(false))
+          // console.log("request dta here",res.data)
         })
         .catch(err=>console.log(err))
     }
     fetch()
-  },[user,field])
+  },[user,field,fetch])
 
   useEffect(()=>{
     const fetch =async()=>{
@@ -53,24 +61,24 @@ const Friends = () => {
         .catch(err=>console.log(err))
     }
     fetch()
-  },[user,field])
+  },[user,field,fetch])
 
 
   return (
     <div className="pt-16 text-white min-h-screen relative">
       <div className="flex w-full">
-        <aside className={`fixed top-0 left-0 h-screen w-[22%] border-r-2 ${theme?'border-[#2c2c2c] bg-[#1a1919]':'bg-[#e9ebee] border-[#cdcdfc]'} pt-16`}>
+        <aside className={`fixed top-0 left-0 h-screen w-[22%] border-r-2 ${theme?'border-[#2c2c2c] bg-[#1a1919]':'bg-[#e9ebee] border-[#cdcdfc]'} pt-28 sm:pt-16`}>
           <div className={`${theme?'bg-[#1d1d1d] text-[#969595]':'bg-[#e9ebee] text-[#6d6c6c]'} mt-3 rounded-md px-2 py-1`} >
               <button className={`text-[18px] w-full text-left  ${(field=='friends')?theme?'bg-[#3a3a3a]':'bg-black bg-opacity-5':theme?'bg-[#1d1d1d] hover:bg-[#3a3a3a]':'bg-[#e9ebee] hover:bg-black hover:bg-opacity-5'} rounded-md py-2 pl-1`} onClick={()=>{setField("friends")}}>
-                <i className="fa-solid fa-user-check mr-2"></i>All Friends
+                <i className="fa-solid fa-user-check mr-2"></i><span className='hidden sm:inline'>All Friends</span>
               </button>
               <div className={`h-[0.8px] my-1`}></div>
               <button className={`text-[18px] w-full text-left ${(field=='friendrequest')?theme?'bg-[#3a3a3a]':'bg-black bg-opacity-5':theme?'bg-[#1d1d1d] hover:bg-[#3a3a3a]':'bg-[#e9ebee] hover:bg-black hover:bg-opacity-5'} rounded-md py-2 pl-1`} onClick={()=>{setField("friendrequest")}}>
-                <i className="fa-solid fa-user-plus mr-2"></i>Friend request
+                <i className="fa-solid fa-user-plus mr-2"></i><span className='hidden sm:inline'>Friend request</span>
               </button>
           </div>
         </aside>
-        <section className={`absolute right-0 top-0 pt-16 w-[78%] min-h-screen ${theme?'bg-[#1a1919]':'bg-[#e9ebee]'}  px-7`}>
+        <section className={`absolute right-0 top-0 pt-28 sm:pt-16 w-[78%] min-h-screen ${theme?'bg-[#1a1919]':'bg-[#e9ebee]'}  px-7`}>
           <div className="py-5 pr-10">
             {(field==='friends')?
               <div className='flex flex-wrap gap-3 justify-evenly lg:justify-start'>

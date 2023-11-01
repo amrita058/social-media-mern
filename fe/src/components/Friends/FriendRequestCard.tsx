@@ -1,12 +1,14 @@
-import { useSelector } from "react-redux"
+import {useDispatch, useSelector } from "react-redux"
 import { Link } from "react-router-dom"
 import {useEffect, useState} from "react"
 import axios from "axios"
 import { toast } from "react-toastify"
+import { changeFetch } from "../../features/slice"
 
 
 const FriendRequestCard =(props:any)=>{
     const token = localStorage.getItem('token')
+    const dispatch = useDispatch()
     const [mutualCount, setMutualCount] = useState(0)
 
     const theme = useSelector((state:any)=>{
@@ -21,30 +23,38 @@ const FriendRequestCard =(props:any)=>{
     useEffect(()=>{
         if(user){
             const mutualFriend = user.friends.filter((friend:any)=> props.friend.requestFrom.friends.includes(friend))
-            console.log("mutual friend here",mutualFriend)
+            // console.log("mutual friend here",mutualFriend)
             setMutualCount(mutualFriend.length)
         }
     },[user])
 
     const handleApprove =async(id:string)=>{
-        console.log("requested id here",id)
+        // console.log("requested id here",id)
         await axios.post('http://localhost:7000/api/approve-request',{_id:id,status:"Approved"},{
             headers:{
                 Authorization:`${token}`
             }
         })
-        .then(res=>console.log(res.data))
+        .then(res=>{
+            toast.success("Request Accepted",{theme:theme?"dark":"light"})
+            dispatch(changeFetch(true))
+            // console.log(res.data)
+        })
         .catch(err=>toast("Request failed"))
     }
 
     const handleDecline =async(id:string)=>{
-        console.log("requested id here",id)
+        // console.log("requested id here",id)
         await axios.post('http://localhost:7000/api/approve-request',{_id:id,status:"Declined"},{
             headers:{
                 Authorization: `${token}`
             }
         })
-        .then(res=>console.log(res.data))
+        .then(res=>{
+            // console.log(res.data)
+            dispatch(changeFetch(true))
+            toast.success("Request Declined",{theme:theme?"dark":"light"})
+        })
         .catch(err=>toast("Request failed"))
     }
     

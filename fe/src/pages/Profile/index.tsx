@@ -99,7 +99,8 @@ const Profile = () => {
                         <p className={`text-sm mb-7`}>{user.email}</p>
                         <div className="-translate-x-12 translate-y-4">
                           <label htmlFor="choose_file" className="py-1 px-2 hover:bg-[#555555] bg-[#aa77f0] cursor-pointer rounded-full text-white"><i className="fa-solid fa-camera-retro"></i>
-                          <input type="file" id="choose_file" name="video_to_upload" className="hidden" onChange={(e)=>{onChangePicture(e)}}/>
+                          <input type="file" id="choose_file" name="video_to_upload" className="hidden" accept="image/jpeg, image/png" onChange={(e)=>{onChangePicture(e)}}/>
+                          {errors.file && <p className='text-red-400'>{errors.file.message}</p>}
                           {/* <i className="fa fa-cloud-upload fa-fw" aria-hidden="true"></i>&nbsp; */}
                           </label>
                         </div>

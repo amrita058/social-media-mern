@@ -17,6 +17,7 @@ type AddPostParams = z.infer<typeof AddPostSchema>
 
 const AddItemModal: React.FC<AddItemModalProps> = ({onClose}) => {
   const token = localStorage.getItem("token")
+  const [picture, setPicture] = useState<any>('http://localhost:7000/uploaded/1698773669941-preview-high-resolution-logo-transparent.png');
 
   const dispatch = useDispatch()
 
@@ -73,6 +74,12 @@ const AddItemModal: React.FC<AddItemModalProps> = ({onClose}) => {
           console.log(e)
       }
 
+      const onChangePicture = (e:any) => {
+        // console.log('picture: ', picture)
+        setPicture(URL.createObjectURL(e.target.files[0]))
+        // console.log("updated url",picture)
+      };
+
   return (
     <>
         <div className="fixed top-0 left-0 min-h-screen w-full z-[100] flex justify-center items-center bg-black bg-opacity-80"  onClick={()=>handleClick("close")}></div>
@@ -91,11 +98,13 @@ const AddItemModal: React.FC<AddItemModalProps> = ({onClose}) => {
                 </div>
                 {/* {errors.content && <p className='text-red-400'>{errors.content.message}</p>} */}
 
-                <div className='flex gap-4 justify-between items-center'>
+                <div className='flex gap-4 justify-between items-end pr-6'>
                   <label htmlFor="choose_file" className="py-1 px-2 bg-[#aa77f0] cursor-pointer rounded-md text-white">Choose Image
-                    <input type="file" id='choose_file' placeholder='Enter image URL' {...register('file')} className={`${theme?'text-[#c4c3c3] bg-black':'text-[#555555] bg-transparent'} bg-opacity-5 focus:outline-none`} onChange={(e)=>{setUserImage(e.target.files?e.target.files[0]:null)}} hidden accept="image/png, image/jpeg" />
+                    <input type="file" id='choose_file' placeholder='Enter image URL' {...register('file')} className={`${theme?'text-[#c4c3c3] bg-black':'text-[#555555] bg-transparent'} bg-opacity-5 focus:outline-none`} onChange={(e)=>{setUserImage(e.target.files?e.target.files[0]:null);onChangePicture(e)}} hidden accept="image/png, image/jpeg" />
                   </label>
+                  <img src={picture} className='w-32 h-32 border-2 p-1'/>
                 </div>
+                
                 {/* {errors.photo && <p className='text-red-400'>{errors.photo.message}</p>} */}
                 
                 <button type="submit" className={`border-2 border-[#888787] rounded-md px-2 py-2 ${theme?'bg-[#1a1919] bg-opacity-50 hover:bg-opacity-80 text-[#ffffff]':'bg-[#1a1919] bg-opacity-5 hover:bg-[#e9ebee] hover:bg-opacity-60 text-[#232323]'} ${!contentInput?'cursor-not-allowed':''}`} disabled={!contentInput} >Post</button>

@@ -1,7 +1,7 @@
 import { BrowserRouter, Routes,Route, Navigate} from 'react-router-dom'
 import { lazy,Suspense, useEffect } from 'react'
 import {useSelector,useDispatch} from 'react-redux'
-import { authenticate, changeDrop, changeUser, unauthenticate } from './features/slice'
+import { authenticate, changeDrop, changeNotify, changeUser, unauthenticate } from './features/slice'
 
 import Navbar from './components/Navbar'
 import axios from 'axios'
@@ -61,7 +61,7 @@ function App() {
     <div className={`${theme?'bg-[#1a1919]':'bg-[#e9ebee]'} min-h-screen`}>
       <BrowserRouter>
       {auth?<Navbar/>:<></>}
-      <div onClick={()=>dispatch(changeDrop(false))}>
+      <div onClick={()=>{dispatch(changeDrop(false));dispatch(changeNotify(false))}}>
         <Routes>
           <Route path='/login' element={auth?<Suspense><Navigate to='/' /></Suspense>:<Suspense><Login/></Suspense>}></Route>
           <Route path='/register' element={auth?<Suspense><Navigate to='/' /></Suspense>:<Suspense><Register/></Suspense>}></Route>

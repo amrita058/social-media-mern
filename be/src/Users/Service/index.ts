@@ -176,6 +176,16 @@ export const getFriendRequest = async(requestid:string,page:number,limit:number)
     }
 }
 
+export const getSentRequest = async(userid:string)=>{
+    try{
+        return await UserRepository.getSentRequest(userid)
+    }
+    catch(e){
+        console.log(e)
+        throw e
+    }
+}
+
 export const approveFriendRequest = async(requestid:string,status:string)=>{
     try{
         const checkRequest = await UserRepository.approveFriendRequest(requestid,status)

@@ -29,6 +29,17 @@ export const getPost = async (req:Request,res:Response)=>{
     }
 }
 
+export const deletePosts = async (req:Request,res:Response)=>{
+    try{
+        // console.log(req.params.id)
+        res.status(201).json(await PostService.deletePosts(req.params.id))
+    }
+    catch(e){
+        console.log(e)
+        throw e
+    }
+}
+
 export const postComments = async (req:Request,res:Response)=>{
     try{
         // console.log(req.body.comment)

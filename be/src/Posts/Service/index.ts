@@ -29,6 +29,16 @@ export const getPost = async(id:string,page:number,limit:number)=>{
   }
 }
 
+export const deletePosts = async(postId:string)=>{
+  try{
+    // console.log("validate data",validateData)
+    return await PostRepository.deletePosts(postId)
+ 
+  }catch(e){
+    console.log("error in file upload",e)
+  }
+}
+
 export const postComments = async(postId:string,userId:any,comment:string)=>{
   try{
     // console.log("validate data",validateData)

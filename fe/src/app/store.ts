@@ -11,6 +11,8 @@ export const store = configureStore({
         user:allSlice.user,
         postInfo:allSlice.postInfo,
         query:allSlice.query,
-        post:allSlice.post
+        post:allSlice.post,
+        count:allSlice.count,
+        fetch:allSlice.fetch
     }
 })

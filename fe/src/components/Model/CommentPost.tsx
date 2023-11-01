@@ -1,4 +1,3 @@
-// import React, { useRef, useState } from 'react';
 import { useForm, SubmitHandler} from 'react-hook-form';
 import {z} from "zod"
 import axios from 'axios';
@@ -7,6 +6,8 @@ import { useSelector } from 'react-redux';
 import { CommentPostSchema } from '../../types/type';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useEffect, useState } from 'react';
+import { io } from 'socket.io-client';
+import NotificationSkeleton from '../Skeleton/Notification';
 
 interface CommentModalProps {
   onClose: () => void;
@@ -73,6 +74,11 @@ const CommentPostModal: React.FC<CommentModalProps> = ({onClose}) => {
         toast.success("Success",{theme:theme?"dark":"light"})
         const addComment = [res.data]
         setComments((prevComments:any) => [ ...addComment,...prevComments])
+        const socket = io('http://localhost:7000')
+        console.log(socket)
+        const receiver:string = postInfo.userName
+        const notify:string = `${user.userName} commented on your post`
+        socket?.emit("sendNotification",{user,receiver,notify})
         reset()
         // onClose()
       }) 
@@ -95,7 +101,7 @@ const CommentPostModal: React.FC<CommentModalProps> = ({onClose}) => {
         }})
       .then(res=>{
         console.log("Ack state",res.data)
-        toast.success("Success",{theme:theme?"dark":"light"})
+        // toast.success("Success",{theme:theme?"dark":"light"})
         const newComments = comments.filter((_:any, index:number) => index !== idx)
         setComments(newComments)
         // onClose()
@@ -155,7 +161,7 @@ const CommentPostModal: React.FC<CommentModalProps> = ({onClose}) => {
                             })}
                           </>}
                           </>
-                          :<></>}
+                          :<><NotificationSkeleton/></>}
                         </div>
                       </div>
 

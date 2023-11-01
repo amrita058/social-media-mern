@@ -76,10 +76,33 @@ export const getPost = async(id:string,page:number,limit:number)=>{
     }
 }
 
+export const deletePosts = async(postId:string)=>{
+    try{
+        // console.log("delete comments repo")
+        // console.log(commentId)
+        const Id = new ObjectId(postId)
+    
+        const comment = await Post.findById(Id)
+        if(comment){
+            const deletePost = await Post.deleteOne({_id:Id})
+            return deletePost
+        }
+        else{
+            return "No post to delete"
+        }        
+    }
+    catch(error){
+        console.log(error)
+        throw error
+    }
+}
+
 export const postComments = async(postId:string,userId:any,comment:string)=>{
     try{
         const postID = new ObjectId(postId)
         const userID = new ObjectId(userId)
+        const checkPost = await Post.findById(postID)
+        const checkUser = await User.findById(userID)
         const newComment = await new Comment({userId:userID,postId:postID,comment:comment})
         const insertedComment = await newComment.save()
         const addedComment  = await Comment.findById(insertedComment._id)
@@ -91,6 +114,8 @@ export const postComments = async(postId:string,userId:any,comment:string)=>{
             _id: -1
             })
         // console.log("reached here",addedComment)
+        const newNotification = await new Notification({sender:userID,receiver:checkPost.userId,message:`${checkUser.userName} commented on your post`})
+        await newNotification.save()
         return addedComment
     }
     catch(error){
@@ -154,14 +179,15 @@ export const likePost = async(postId:string,userId:any)=>{
             const index = checkPost.likes.findIndex((id:any)=> id===userId)
             if(index ===-1){
                 checkPost.likes.push(userId)
-                console.log("here here",checkPost)
+                // console.log("here here",checkPost)
+                const newNotification = await new Notification({sender:userID,receiver:checkPost.userId,message:`${checkUser.userName} liked your post`})
+                await newNotification.save()
             }
             else{
                 checkPost.likes = checkPost.likes.filter((id:any)=> id !==userId) 
             }
             const updatePost = await Post.findByIdAndUpdate(postID,checkPost,{new:true})
-            const newNotification = await new Notification({sender:userID,receiver:checkPost.userId,message:`${checkUser.userName} liked your post`})
-            await newNotification.save()
+            
             return updatePost
         }
         else{

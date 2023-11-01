@@ -25,6 +25,7 @@ const routes = () => {
     router.get('/user/:id/profile',verifyJwt,UserController.viewProfile)
     router.post('/friend-request',verifyJwt,UserController.friendRequest)
     router.get('/user/:id/friend-request',verifyJwt,UserController.getFriendRequest)
+    router.get('/user/sent-request',verifyJwt,UserController.getSentRequest)
     router.post('/approve-request',verifyJwt,UserController.approveFriendRequest)
     router.get('/user/:id/friends',verifyJwt,UserController.getFriends)
     router.get('/user/suggest-friends',verifyJwt,UserController.suggestFriends)

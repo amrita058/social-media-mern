@@ -33,7 +33,7 @@ io.on("connection", (socket:any) => {
   })
 
   socket.on('sendNotification',(data:any)=>{
-    // console.log('Received message from user:', data);
+    console.log('Received message from user:', data);
     if(data.user.userName !== data.receiver){
       io.emit('getNotification',data)
     }

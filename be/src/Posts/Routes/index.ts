@@ -10,6 +10,7 @@ const router = Router();
 const routes = () => {
     router.post("/posts",verifyJwt,upload.single('file'),PostController.uploadPost)
     router.get("/posts/user/:id",verifyJwt,PostController.getPost)
+    router.delete("/posts/:id",verifyJwt,PostController.deletePosts)
     router.post("/posts/:id/comments",verifyJwt,PostController.postComments)
     router.get("/posts/:id/comments",verifyJwt,PostController.getComments)
     router.delete("/posts/:id/comments",verifyJwt,PostController.deleteComments)

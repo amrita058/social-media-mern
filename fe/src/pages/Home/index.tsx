@@ -127,13 +127,13 @@ const Home = () => {
 
   return (
     <div className='min-h-screen'>
-    <div className='pt-16'>
+    <div className='pt-28 sm:pt-16'>
     <div className='flex justify-between w-full px-10 py-4'>
 
       {/* LEFT SIDE CONTENT OF HOME */}
       <div className='w-[25%] text-center fixed left-0 pl-8 hidden md:block'>
         <Bio postsCount={postCount}/>
-        <div className='mb:5 lg:mb-8'></div>
+        <div className='mb-5 lg:mb-8'></div>
         <div>
         {suggestLoading?<><SuggestSkeleton/></>:
           <>

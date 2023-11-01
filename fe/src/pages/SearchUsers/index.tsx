@@ -9,6 +9,8 @@ const SearchUsers = () => {
     const token = localStorage.getItem('token')
     const [searchUsers,setSearchUsers] = useState([])
     const [loading,setLoading] = useState(true)
+    const [sentRequest,setSentRequest] = useState<any>([])
+    const [fetchRequest,setFetchRequest] = useState(false)
 
     const theme = useSelector((state:any)=>{
         return state.theme.dark
@@ -23,6 +25,24 @@ const SearchUsers = () => {
         return state.query
     })
 
+    useEffect(()=>{
+      const fetch = async()=>{
+          axios.get(`http://localhost:7000/api/user/sent-request`,{
+              headers:{
+                Authorization:`${token}`
+              }
+            })
+            .then(res=>{
+              console.log(res.data)
+              setSentRequest(res.data)
+              setFetchRequest(false)
+            })
+            .catch(err=>toast.error(err.message))
+      }
+      fetch()
+    },[query,fetchRequest])
+
+    
     useEffect(()=>{
       const fetch = async()=>{
           axios.get(`http://localhost:7000/api/user/search?name=${query}`,{
@@ -48,19 +68,20 @@ const SearchUsers = () => {
         }
       })
       .then(res=>{
-        toast.success("Request sent")
+        setFetchRequest(true)
+        toast.success("Request successfully sent",{theme:theme?"dark":"light"})
         
       }
       )
       .catch(err=>{
         console.log(err)
-        toast.error("You are already friends")
+        toast.error("Friend request already sent",{theme:theme?"dark":"light"})
       })
     }
 
   return (
     <div className="flex gap-4 flex-wrap pt-20 px-3 sm:px-10">
-      <div className="pt-10 mb-3 flex flex-wrap gap-5 justify-center items-center">
+      <div className="pt-24 sm:pt-10 mb-3 flex flex-wrap gap-5 justify-center items-center">
         {user?
         <>
         {!loading?<>
@@ -82,8 +103,8 @@ const SearchUsers = () => {
             </p>
 
             <div className={`mt-6 flex flex-col rounded-b-md rounded-t-2xl shadow-xl p-1 hover:scale-105 ${theme?'bg-[#555555] shadow-[#000000]':'bg-[#ffffff] shadow-[#b8b7b7] text-[#545454]'}`}>
-                <button className="font-semibold px-4 py-2 rounded-md flex items-center space-x-2 transform-gpu transition-all duration-200 hover:bg-purple-400 active:scale-90 w-full" onClick={()=>handleRequest(searchUser._id)}>
-                    <span>{user.friends.includes(searchUser._id)?'Friends':'Add Friend'}</span>
+                <button className="font-semibold px-4 py-2 rounded-md flex items-center space-x-2 transform-gpu transition-all duration-200 hover:bg-purple-400 active:scale-90 w-full" disabled={user.friends.includes(searchUser._id)} onClick={()=>handleRequest(searchUser._id)}>
+                    <span>{user.friends.includes(searchUser._id)?'Friends':`${sentRequest.includes(String(searchUser._id))?'Request Sent':'Add Friend'}`}</span>
                 </button>
 
                 <Link to={`/profile/${searchUser._id}`}>

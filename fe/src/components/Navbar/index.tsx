@@ -11,9 +11,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import Notifications from '../Notification';
 
 const Navbar = () => {
-    type SearchParams = z.infer<typeof SearchUserSchema>
-    const count =1
-
+  type SearchParams = z.infer<typeof SearchUserSchema>
   // const token = localStorage.getItem('token')
   const dispatch = useDispatch()
   const location = useLocation()
@@ -25,6 +23,9 @@ const Navbar = () => {
     return state.theme.dark
   })
 
+  const count = useSelector((state:any)=>{
+    return state.count.count
+  })
   const notify = useSelector((state:any)=>{
     return state.notify.value
   })
@@ -77,12 +78,12 @@ const Navbar = () => {
           <div className={`${theme?'text-[#555555]':'text-[#757575]'} cursor-pointer`}>
             <i className={`fa-solid fa-star-and-crescent text-xl -rotate-45`} onClick={handleTheme}></i>
           </div>
-          <button className={`${theme?'text-[#555555]':'text-[#757575]'} cursor-pointer`} onClick={()=>{dispatch(changeNotify(!notify))}}>
+          <button className={`${theme?'text-[#555555]':'text-[#757575]'} cursor-pointer`} onClick={()=>{dispatch(changeNotify(!notify));dispatch(changeDrop(false))}}>
           {(count>0)?<p className='absolute top-4 right-20 bg-red-400 rounded-full text-white text-[10px] px-[4px]'>{count}</p>:<></>}
             <i className="fa-solid fa-bell text-xl"></i>
           </button>
-          {notify?<Notifications/>:<></>}
-            {/* <Notifications/> */}
+          {/* {notify?<Notifications/>:<></>} */}
+            <Notifications/>
           <div>
             <Dropdown/>
           </div>

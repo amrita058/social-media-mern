@@ -101,6 +101,17 @@ export const getFriendRequest = async(req:Request,res:Response)=>{
     }
 }
 
+export const getSentRequest = async(req:Request,res:Response)=>{
+    try{
+        // console.log("reached here at controller",req.params.id,req.query)
+        res.status(201).json(await UserService.getSentRequest(req.user._id))
+    }
+    catch(e){
+        console.log(e)
+        res.status(500).json(e)
+    }
+}
+
 export const approveFriendRequest = async(req:Request,res:Response)=>{
     try{
         console.log(req.body._id,req.body.status)
