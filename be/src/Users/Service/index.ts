@@ -143,14 +143,15 @@ export const updateProfile = (user:Partial<registerParams>,file:any,id:any)=>{
 
 export const friendRequest = async(request:friendRequestParams)=>{
     try{
-        const validateData = FriendRequestSchema.safeParse(request)
-        if(!validateData.success){
-            const error = new CustomError("Invalid data",401)
-            throw error
-        }
-        else{
-            return await UserRepository.friendRequest(request)
-        }
+        // const validateData = FriendRequestSchema.safeParse(request)
+        // if(!validateData.success){
+        //     const error = new CustomError("Invalid data",401)
+        //     throw error
+        // }
+        // else{
+            console.log("here at friend request repo",request)
+        return await UserRepository.friendRequest(request)
+        // }
     }
     catch(e){
         console.log(e)
@@ -168,6 +169,16 @@ export const getFriendRequest = async(requestid:string,page:number,limit:number)
         else{
             return "No requests found"
         }
+    }
+    catch(e){
+        console.log(e)
+        throw e
+    }
+}
+
+export const getSentRequest = async(userid:string)=>{
+    try{
+        return await UserRepository.getSentRequest(userid)
     }
     catch(e){
         console.log(e)
@@ -193,5 +204,76 @@ export const viewProfile = async(userid:string)=>{
     catch(e){
         console.log(e)
         throw e
+    }
+}
+
+
+export const getFriends = async(requestid:string,page:number,limit:number)=>{
+    try{
+        const checkRequest = await UserRepository.getFriends(requestid,page,limit)
+        // console.log(checkRequest)
+        if(checkRequest){
+            return checkRequest
+        }
+        else{
+            return "No requests found"
+        }
+    }
+    catch(e){
+        console.log(e)
+        throw e
+    }
+}
+
+export const suggestFriends = async(userId:string)=>{
+    try{
+        const checkSuggestion = await UserRepository.suggestFriends(userId)
+        // console.log(checkRequest)
+        if(checkSuggestion){
+            return checkSuggestion
+        }
+        else{
+            return "No suggestions found"
+        }
+    }
+    catch(e){
+        console.log(e)
+        throw e
+    }
+}
+
+export const searchPeople = async(name:any)=>{
+    try{
+        const checkRequest = await UserRepository.searchPeople(name)
+        // console.log(checkRequest)
+        if(checkRequest){
+            return checkRequest
+        }
+        else{
+            return "No requests found"
+        }
+    }
+    catch(e){
+        console.log(e)
+        throw e
+    }
+}
+
+export const getNotification = async(userid:string)=>{
+    try{
+        return await UserRepository.getNotification(userid)
+    }
+    catch(e){
+        console.log(e)
+        throw e
+    }
+}
+
+export const updateNotification = (id:any)=>{
+    try{
+        return UserRepository.updateNotification(id)
+    }
+    catch(e){
+        console.log(e)
     }
 }

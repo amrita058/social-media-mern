@@ -1,4 +1,3 @@
-import React, { useRef, useState } from 'react';
 import { useForm, SubmitHandler} from 'react-hook-form';
 import {z} from "zod"
 import axios from 'axios';
@@ -6,16 +5,21 @@ import {toast } from 'react-toastify';
 import { useSelector } from 'react-redux';
 import { CommentPostSchema } from '../../types/type';
 import { zodResolver } from '@hookform/resolvers/zod';
-
+import { useEffect, useState } from 'react';
+import { io } from 'socket.io-client';
+import NotificationSkeleton from '../Skeleton/Notification';
 
 interface CommentModalProps {
   onClose: () => void;
 }
 
-type AddPostParams = z.infer<typeof CommentPostSchema>
+type CommentPostParams = z.infer<typeof CommentPostSchema>
 
 const CommentPostModal: React.FC<CommentModalProps> = ({onClose}) => {
     const token = localStorage.getItem("token")
+    const [comments,setComments] = useState<any>([]) 
+    const [loading, setLoading] = useState(false)
+    const [commentloading,setCommentLoading] = useState(true)
 
     const theme = useSelector((state:any)=>{
         return state.theme.dark
@@ -26,38 +30,61 @@ const CommentPostModal: React.FC<CommentModalProps> = ({onClose}) => {
     })
 
     const postInfo = useSelector((state:any)=>{
-        // console.log("at comment model",state.postInfo)
+        console.log("at comment model",state.postInfo.id)
         return state.postInfo
     })
 
     const {
         register,
         handleSubmit,
-        // reset,
+        reset,
         // watch,
         // formState: { errors },
-    } = useForm<AddPostParams>({resolver:zodResolver(CommentPostSchema)});
+    } = useForm<CommentPostParams>({resolver:zodResolver(CommentPostSchema)});
 
-    const onSubmit: SubmitHandler<AddPostParams> = async (data,e) => {
+    useEffect(()=>{
+      const fetch = async()=>{
+        await axios.get(`http://localhost:7000/api/posts/${postInfo.id}/comments`,{
+          headers:{
+            Authorization: `${token}`
+          }
+        })
+        .then(res=>{
+          // console.log("comments here",res.data)
+          setComments(res.data)
+          setCommentLoading(false)
+        })
+        .catch(err=>{
+          console.log(err)
+        })
+      }
+      fetch()
+    },[user])
+
+    const onSubmit: SubmitHandler<CommentPostParams> = async (data,e) => {
       e?.preventDefault()
-      console.log("comment on enter")
-      // const formData = new FormData();
-      // console.log("form data here",formData,userImage,data.content)
-      // for (var [key, value] of formData.entries()) { 
-      //   console.log("formdata",key, value);}
-      axios.post(`http://localhost:7000/api/posts/:id/comment`,data,{
+      // console.log("comment on enter",data.comment)
+      setLoading(true)
+      axios.post(`http://localhost:7000/api/posts/${postInfo.id}/comments`,data,{
         headers: {
           Authorization: `${token}`,
-          "Content-Type": "multipart/form-data",
         }})
-      .then(res=>{console.log("Ack state",res.data)
+      .then(res=>{
+        console.log("Ack state",res.data)
         toast.success("Success",{theme:theme?"dark":"light"})
-        onClose()
-      })
+        const addComment = [res.data]
+        setComments((prevComments:any) => [ ...addComment,...prevComments])
+        const socket = io('http://localhost:7000')
+        console.log(socket)
+        const receiver:string = postInfo.userName
+        const notify:string = `${user.userName} commented on your post`
+        socket?.emit("sendNotification",{user,receiver,notify})
+        reset()
+        // onClose()
+      }) 
       .catch(error=>{console.log(error)
       toast.error(error.message,{theme:theme?'dark':'light'})})
-      // console.log(data);
-      // reset();
+      .finally(()=>setLoading(false))
     };
 
     const handleClick =(state:string)=>{
@@ -67,6 +94,23 @@ const CommentPostModal: React.FC<CommentModalProps> = ({onClose}) => {
       }
     }
     
+    const handleCommentDelete =(idx:number,id:string)=>{
+      axios.delete(`http://localhost:7000/api/posts/${id}/comments`,{
+        headers: {
+          Authorization: `${token}`,
+        }})
+      .then(res=>{
+        console.log("Ack state",res.data)
+        // toast.success("Success",{theme:theme?"dark":"light"})
+        const newComments = comments.filter((_:any, index:number) => index !== idx)
+        setComments(newComments)
+        // onClose()
+      })
+      .catch(error=>{console.log(error)
+      toast.error(error.message,{theme:theme?'dark':'light'})})
+
+    }
+
     const onError =(e:any)=>{
         console.log(e)
     }
@@ -91,13 +135,34 @@ const CommentPostModal: React.FC<CommentModalProps> = ({onClose}) => {
                         
                       </div>
 
-                      <div className='overflow-y-auto h-80 w-full my-3 px-4'>
+                      <div className={`overflow-y-auto h-80 w-full my-3 px-4 scrollbar-thin ${theme?'scrollbar-thumb-[#aa77f0] scrollbar-track-[#3d3d3d]':'scrollbar-thumb-[#aa77f0] scrollbar-track-[#f3f2f2]'}   overflow-x-hidden`}>
                         <div className='py-2 text-left w-full'>
                             <p>{postInfo.content}</p>
                         </div>
                         <div className='w-full flex justify-center'>{postInfo.photo!=''?<img src={postInfo.photo} className='w-full'/>:<></>}</div>
-                          <div className={`h-[0.8px] w-full ${theme?'bg-[#737373]':'bg-[#b6b5b5]'} my-2`}></div>
-                        <div className='text-left w-full'>No comment available</div>
+                          <div className={`h-[0.8px] w-full ${theme?'bg-[#737373]':'bg-[#b6b5b5]'} my-3`}></div>
+                        <div className='text-left w-full'>
+                        
+                        {!commentloading?
+                        <>
+                          {comments.length===0?<>
+                            Be the first one to comment
+                            </>:<>
+                            {comments.map((comment:any,idx:number)=>{
+                              return<div key={idx}>
+                                <div className={`w-full py-2 flex justify-between items-center px-1 rounded-md ${theme?'hover:bg-[#666666]':'hover:bg-black hover:bg-opacity-10'} group`}>
+                                  <p><img src={comment.userId.url} className={`w-8 h-8 mr-2 rounded-full inline-block`}/><span className={` px-3 py-2 rounded-2xl`}>{comment.comment}</span></p>
+                                  {user.userName === comment.userId.userName?
+                                  <button className={`${theme?'text-white':'text-[#232323]'}text-md items-center hidden group-hover:block`} onClick={()=>handleCommentDelete(idx,comment._id)}><i className="fa-solid fa-trash-arrow-up px-2"></i></button>:<></>
+                                  }
+                                  
+                                </div>
+                              </div> 
+                            })}
+                          </>}
+                          </>
+                          :<><NotificationSkeleton/></>}
+                        </div>
                       </div>
 
                       
@@ -106,7 +171,7 @@ const CommentPostModal: React.FC<CommentModalProps> = ({onClose}) => {
                       <div className='flex gap-4 justify-between items-center py-2 px-3 w-full  shadow-2xl shadow-black'>
                         <img src={user.url} className='h-10 w-10 rounded-full'/>
                         <input type='text' placeholder='Comment' {...register('comment')} className={`${theme?'text-[#c4c3c3] bg-transparent border-2 border-[#555555]':'text-[#555555] border-2 border-[#a9a8a8]'} w-full focus:outline-none focus:border-[#aa77f0] p-2`} />
-                        <button type="submit" className={`text-3xl ${theme?' text-[#e0e0e0]':' text-[#7e7e7e]'} `}><i className="fa-solid fa-circle-chevron-right"></i></button>
+                        <button type="submit" className={`text-3xl ${theme?' text-[#e0e0e0]':' text-[#7e7e7e]'} `} disabled={loading}><i className="fa-solid fa-circle-chevron-right"></i></button>
                       </div> 
                     </section>
                   </div>

@@ -12,7 +12,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 
 type RegisterParams =  Partial<z.infer<typeof UserRegisterSchema>>
 
-
 const Profile = () => {
   const dispatch = useDispatch()
   const token = localStorage.getItem("token")
@@ -79,7 +78,7 @@ const Profile = () => {
   }
 
     return (
-      <div className="pt-16 text-white min-h-screen flex items-center">
+      <div className="pt-28 sm:pt-16 text-white min-h-screen flex items-center">
         <div className="w-full px-3 sm:px-10 flex">
           <div className={`${theme?' bg-opacity-70':''} shadow-lg shadow-[#aa77f0] w-full rounded-md`}>
             <form onSubmit={handleSubmit(onSubmit,onError)} className='flex flex-col justify-center border-0 rounded-r-xl w-full h-full backdrop-blur-[2px]' encType="multipart/form-data">
@@ -98,8 +97,9 @@ const Profile = () => {
                         <p>{user.userName}</p>
                         <p className={`text-sm mb-7`}>{user.email}</p>
                         <div className="-translate-x-12 translate-y-4">
-                          <label htmlFor="choose_file" className="py-1 px-2 hover:bg-[#555555] bg-[#aa77f0] cursor-pointer rounded-md text-white"><i className="fa-solid fa-camera-retro"></i>
-                          <input type="file" id="choose_file" name="video_to_upload" className="hidden" onChange={(e)=>{onChangePicture(e)}}/>
+                          <label htmlFor="choose_file" className="py-1 px-2 hover:bg-[#555555] bg-[#aa77f0] cursor-pointer rounded-full text-white"><i className="fa-solid fa-camera-retro"></i>
+                          <input type="file" id="choose_file" name="video_to_upload" className="hidden" accept="image/jpeg, image/png" onChange={(e)=>{onChangePicture(e)}}/>
+                          {errors.file && <p className='text-red-400'>{errors.file.message}</p>}
                           {/* <i className="fa fa-cloud-upload fa-fw" aria-hidden="true"></i>&nbsp; */}
                           </label>
                         </div>
@@ -107,9 +107,12 @@ const Profile = () => {
                     </div>
                     {/* <div className="h-[0.8px] bg-[#444444] mx-4"></div> */}
                     <div className={`h-[0.8px] ${theme?'bg-[#444343]':'bg-[#d1d0d0]'}`}></div>
-                    <div className={`flex ${theme?'text-[#c3c3fc]':'text-[#232323]'} justify-center text-2xl px-4 py-1 lg:px-5 lg:py-10 gap-6`}>
-                      <div className="flex gap-1 items-center text-sm "><i className="fa-solid fa-clipboard bg-transparent text-[#44df78] shadow-[#44df78] shadow-md"></i>200 Posts</div>
-                      <div className="flex gap-1 items-center text-sm"><i className="fa-solid fa-user-group bg-transparent text-[#44df78] shadow-[#44df78] shadow-md"></i>300 Friends</div>
+                    <div className={`flex ${theme?'text-[#c3c3fc]':'text-[#232323]'} justify-center text-2xl px-4 py-1 lg:px-5 lg:py-5`}>
+                      {/* <div className="text-[1.05rem]">📹 100 Posts</div> */}
+                       {/* <div className="text-[1.75rem] px-3">|</div> */}
+                      <div className="text-[1.05rem]">🤷‍♂️ {user.friends.length} Friends</div>
+                      {/* <div className="flex gap-1 items-center text-sm "><i className="fa-solid fa-clipboard bg-transparent text-[#44df78] shadow-[#44df78] shadow-md"></i>200 Posts</div> */}
+                      {/* <div className="flex gap-1 items-center text-sm"><i className="fa-solid fa-user-group bg-transparent text-[#44df78] shadow-[#44df78] shadow-md"></i>300 Friends</div> */}
                     </div>
                   </div>
                 </aside>
@@ -118,7 +121,6 @@ const Profile = () => {
                 <section className="w-full p-5 ">
                 <div className={`flex-1 ${theme?'bg-[#313131] shadow-black':'bg-[#efeeee]'} shadow-2xl rounded-md`}>
                   <div><h2 className={`${theme?'text-[#ffffff] bg-[#202022]':'text-[#4d4d4d] bg-[#d9d9d9]'} py-5 px-3 rounded-t-md`}>Account Details</h2>
-                  {/* <div className="h-[0.8px] bg-[#444444]"></div> */}
                   <div className={`h-[0.8px] ${theme?'bg-[#444343]':'bg-[#d1d0d0]'}`}></div>
                   </div>
                     <div className="p-3 flex flex-col gap-11">

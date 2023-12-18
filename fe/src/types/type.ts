@@ -14,7 +14,7 @@ export const UserRegisterSchema = z.object({
     password: z.string().min(8,{message:"Must be at least 8 characters"})
                 .regex(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]+$/, {
                     message: 'Must contain at least one uppercase, one lowercase, one number, and one special character'}),
-    file: z.string().optional()
+    file: z.string().max(1024 * 1024, 'File size is too large (max 1MB)').optional()
 })
 
 export const ForgetPasswordSchema  = z.object({
@@ -40,4 +40,14 @@ export const AddPostSchema = z.object({
 export const CommentPostSchema = z.object({
     comment:z.string().refine((value) => value.trim() !== '', {
         message: 'Enter some content'})
+})
+
+export const SearchUserSchema = z.object({
+    query:z.string().refine((value) => value.trim() !== '', {
+        message: 'Enter some content'})
+})
+
+export const FriendRequestSchema = z.object({
+    requestFrom: z.string(),
+    requestTo: z.string()
 })

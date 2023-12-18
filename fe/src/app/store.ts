@@ -6,7 +6,13 @@ export const store = configureStore({
         auth:allSlice.auth,
         theme:allSlice.theme,
         drop:allSlice.drop,
+        notify:allSlice.notify,
+        notification:allSlice.notification,
         user:allSlice.user,
-        postInfo:allSlice.postInfo
+        postInfo:allSlice.postInfo,
+        query:allSlice.query,
+        post:allSlice.post,
+        count:allSlice.count,
+        fetch:allSlice.fetch
     }
 })

@@ -6,6 +6,7 @@ import { FriendRequestSchema, UserLoginSchema, UserRegisterSchema } from "../../
 import { env } from "../../config"
 const User = require("../Models/index")
 const Post = require("../../Posts/Models/index")
+const Notification = require("../Models/notification")
 
 const FriendRequest = require("../Models/friendRequest.ts")
 import { CustomError } from "../../libs";
@@ -122,8 +123,13 @@ export const updateProfile = async(user:Partial<registerParams>,file:any,id:any)
         const checkUser = await User.findOne({"_id":new ObjectId(id)})
         if(checkUser){
             const _id = new ObjectId(id)
-            const imageURL = `http://localhost:${env.PORT}/uploaded/${file}`
-            const updateUser = await User.updateOne({"_id":_id},{ $set: { url:imageURL } },{new:true})
+            if(file!==""){
+                const imageURL = `http://localhost:${env.PORT}/uploaded/${file}`
+                const updateUser = await User.updateOne({"_id":_id},{ $set: { url:imageURL,fullName:user.fullName } },{new:true})
+            }
+            else{
+                const updateUser = await User.updateOne({"_id":_id},{ $set: {fullName:user.fullName } },{new:true})
+            }  
         }
         else{
             throw Error("User not found")
@@ -140,17 +146,20 @@ export const friendRequest = async(request:friendRequestParams)=>{
     try{
         const requestFrom_id = new ObjectId(request.requestFrom)
         const requestTo_id = new ObjectId(request.requestTo)
-        // console.log("body at repo",request)
-        const checkRequest = await FriendRequest.findOne({requestFrom:requestFrom_id,requestTo:requestTo_id})
-        // console.log("request from db",checkRequest)
-        if(checkRequest){
+        // console.log("body at repo",requestFrom_id,requestTo_id)
+        const checkSendRequest = await FriendRequest.findOne({requestFrom:requestFrom_id,requestTo:requestTo_id})
+        const checkReceivedRequest = await FriendRequest.findOne({requestFrom:requestTo_id,requestTo:requestFrom_id})
+        // console.log("request from db",checkSendRequest,checkReceivedRequest)
+        if(checkSendRequest || checkReceivedRequest){
             throw Error("Friend request already sent")
         }
         else{
             const newRequest = await new FriendRequest(request) 
             const insertedRequest = await newRequest.save()
+            // console.log("inserted request here",insertedRequest)
+            return insertedRequest
         }
-        return "Request successfully sent"
+        
     }
     catch(e){
         console.log(e)
@@ -164,14 +173,14 @@ export const getFriendRequest = async(requestid:string,page:number,limit:number)
         const checkRequest = await FriendRequest.find({requestTo:id,requestStatus:"Pending"})
         .populate({
             path: "requestFrom",
-            select: "userName fullName url email"
+            select: "userName fullName url email friends"
         })
-        .skip((page-1)*limit)
-        .limit(limit)
+        // .skip((page-1)*limit)
+        // .limit(limit)
         .sort({
             _id:-1
         })
-        console.log(checkRequest,"at repo")
+        // console.log(checkRequest,"at repo")
         if(checkRequest){
             return checkRequest
         }
@@ -185,18 +194,37 @@ export const getFriendRequest = async(requestid:string,page:number,limit:number)
     }
 }
 
+export const getSentRequest = async(userid:string)=>{
+    try{
+        const id = new ObjectId(userid)
+        const checkRequest = await FriendRequest.find({requestFrom:id,requestStatus:"Pending"})
+        // console.log(checkRequest,"at repo")
+        if(checkRequest){
+            const sentRequestUsersList = checkRequest.map((user:any)=>user.requestTo)
+            return sentRequestUsersList
+        }
+        else{
+            return []
+        }
+    }
+    catch(e){
+        console.log(e)
+        throw e
+    }
+}
+
 export const approveFriendRequest = async(requestid:string,status:string)=>{
     try{
         const id = new ObjectId(requestid)
         const checkRequest = await FriendRequest.findById(id)
-        console.log("here at repo check request",checkRequest)
+        // console.log("here at repo check request",checkRequest)
         if(!checkRequest){
             return "No request found"
         }
         else{
             const updateRequest = await FriendRequest.findByIdAndUpdate({_id:id},{requestStatus:status})
             if(status==="Approved"){
-                console.log("user and friend",checkRequest.requestTo,checkRequest.requestFrom)
+                // console.log("user and friend",checkRequest.requestTo,checkRequest.requestFrom)
                 const user = await User.findById(checkRequest.requestTo)
                 user.friends.push(checkRequest.requestFrom)
                 await user.save()
@@ -204,7 +232,11 @@ export const approveFriendRequest = async(requestid:string,status:string)=>{
                 const friend = await User.findById(checkRequest.requestFrom)
                 friend.friends.push(checkRequest.requestTo)
                 await friend.save()
-                // console.log("user and friend",user,friend)
+                return updateRequest
+            }
+            else{
+                const deleteRequest = await FriendRequest.findByIdAndDelete(id)
+                return deleteRequest
             }
         }
     }
@@ -214,21 +246,137 @@ export const approveFriendRequest = async(requestid:string,status:string)=>{
     }
 }
 
+// GET USERS POST + USER DETAILS
 export const viewProfile = async(userid:string)=>{
     try{
         const posts = await Post.find({userId:new ObjectId(userid)})
                     .populate({
                     path: "userId",
-                    select: "_id userName url fullName email"
+                    select: "_id userName url fullName email friends"
                     })
                     .sort({
                     _id: -1
                     })
         console.log(posts)
+        if(posts.length===0){
+            const user = await User.findOne({_id:new ObjectId(userid)})
+            return user
+        }
         return posts
     }
     catch(e){
         console.log(e)
+        throw e
+    }
+}
+
+export const getFriends = async(requestid:string,page:number,limit:number)=>{
+    try{
+        // console.log("get post repo")
+        const userId = new ObjectId(requestid)
+        const user = await User.findById(userId)
+        const friends = user.friends.toString().split(",") ?? []
+
+        const users = await User.find({})
+        .skip((page-1)*limit)
+        .limit(limit)
+        .sort({
+            _id:-1
+        })
+
+        const friendsdetail = users?.filter((user:any)=>{
+            return friends.includes(user._id.toString())
+        })
+
+        // console.log(friendsdetail,"at repo")
+        if(friendsdetail){
+            return friendsdetail
+        }
+        else{
+            return "No friends found"
+        }
+    }
+    catch(e){
+        console.log(e)
+        throw e
+    }
+}
+
+export const suggestFriends = async(userId:string)=>{
+    try{
+        let suggest:any = {}
+        suggest._id = {$ne:userId}
+        suggest.friends = {$nin:userId}
+        const result = await User.find(suggest)
+                        .select("userName fullName url  email")
+        console.log(result)
+        return result
+    }
+    catch(e){
+        console.log(e)
+        throw e
+    }
+}
+
+export const searchPeople = async(name:any)=>{
+    try{
+        const users = await User.find({})
+        .sort({
+            _id:-1
+        })
+
+        const filterUsers = users?.filter((user:any)=>{
+            return user.userName.toLowerCase().includes(name.toLowerCase())
+        })
+
+
+        if(filterUsers){
+            return filterUsers
+        }
+        else{
+            return "No users found"
+        }
+    }
+    catch(e){
+        console.log(e)
+        throw e
+    }
+}
+
+export const getNotification = async(userid:string)=>{
+    try{
+        const userId = new ObjectId(userid)
+        const notifications = await Notification.find({receiver:userId})
+        .populate({
+            path: "sender",
+            select : "userName url"
+        })
+        .sort({
+            _id:-1
+        })
+        console.log("notification here",notifications)
+        const filteredNotifications = notifications.filter((notification:any) => 
+            !notification.sender._id.equals(notification.receiver)
+        );
+
+        return filteredNotifications
+    }
+    catch(e){
+        console.log(e)
+        throw e
+    }
+}
+
+export const updateNotification = async(id:any)=>{
+    try{
+        // const notification = database.collection('notification')
+        const check = await Notification.findOne({"_id":new ObjectId(id)})
+        if(check){
+            const update = await Notification.updateOne({"_id":new ObjectId(String(id))},{"$set": { "status":"Read"}})
+            return update
+        }
+    }
+    catch(e){
         throw e
     }
 }
