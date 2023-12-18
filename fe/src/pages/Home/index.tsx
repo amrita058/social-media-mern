@@ -43,7 +43,7 @@ const Home = () => {
   useEffect(()=>{
     const fetch = async()=>{
         // console.log(user._id)
-        await axios.get(`http://localhost:7000/api/posts/user/${user._id}?page=${page}&limit=4`,{
+        await axios.get(`http://localhost:7000/api/posts/user/${user._id}?page=${page}&limit=3`,{
             headers:{
                 Authorization: `${token}`
             }
@@ -186,7 +186,16 @@ const Home = () => {
 
       {/* RIGHT SIDE CONTENT OF HOME */}
       <div className='w-[25%] text-center fixed right-0 pr-8 hidden md:block'>
-        <Contacts title="New Notifications"/>
+      {/* <div className={` w-full bg-gradient-to-r from-[#d3bdfa] via-[#c7a6ff] to-[#aa77f0] border-t-[1px] border-[#aa77f0] rounded-md `}>
+          <div className={`${theme?'bg-[#313131] text-[#e0dfdf]':'bg-[#e6e5e5] text-[#525252]'} mt-[6px] rounded-md px-3 pb-2`}>
+            <h2 className='text-left p-3 text-lg'>Contacts</h2>
+            <div className={`h-[0.8px] ${theme?'bg-[#444343]':'bg-[#d1d0d0]'} mb-2 mt-2`}></div>
+            <div className='w-full flex justify-center'>
+              <iframe src="https://giphy.com/embed/S3ycTjpEU56njsqkz1" width="200" height="200" className="giphy-embed rounded-full pointer-events-none"></iframe>
+            </div>
+            <div>Feature yet to come</div>
+          </div>
+      </div> */}
       </div>
     </div>
   </div>

@@ -106,9 +106,11 @@ const ViewProfile =()=>{
                             <p className='text-start'>🤷‍♂️{posts[0].userId.friends.length} Friends</p>
                         </div>
                         <div>
+                            {posts[0].userId._id!==user._id?
                             <button className="mt-3 last:font-semibold px-4 py-1 rounded-md flex items-center space-x-2 transform-gpu transition-all duration-200 border-[1px] border-[#aa77f0] hover:bg-purple-400 active:scale-90 w-full" disabled={user.friends.includes(posts[0].userId._id)} onClick={()=>handleRequest(posts[0].userId._id)}>
                                 <span className={`${theme?'hover:text-white':''}`}>{user.friends.includes(String(posts[0].userId._id))?'Friends':`${sentRequest.includes(String(posts[0].userId._id))?'Request Sent':'Add Friend'}`}</span>
                             </button>
+                            :<></>}
                         </div>
                     </div>
                     
@@ -125,9 +127,11 @@ const ViewProfile =()=>{
                             <p className='text-start'>🤷‍♂️{posts.friends.length} Friends</p>
                         </div>
                         <div>
+                        {posts._id!==user._id?
                             <button className="mt-3 font-semibold px-4 py-1 rounded-md flex items-center space-x-2 transform-gpu transition-all duration-200 border-[1px] border-[#aa77f0] hover:bg-purple-400 active:scale-90 w-full" disabled={user.friends.includes(posts._id)} onClick={()=>handleRequest(posts._id)}>
                                 <span className={`${theme?'hover:text-white':''}`}>{user.friends.includes(String(posts._id))?'Friends':`${sentRequest.includes(String(posts._id))?'Request Sent':'Add Friend'}`}</span>
                             </button>
+                        :<></>}
                         </div>
                     </div>
                     
@@ -137,7 +141,7 @@ const ViewProfile =()=>{
 
                 {/* POSTS */}
                 <div className={`lg:mt-[4rem] lg:ml-[25%] w-full bg-transparent`}>
-                    <h2 className={`py-3 text-[1.5rem] ${theme?'bg-[#1a1919]':'bg-[#e9ebee]'} lg:fixed lg:w-full`}>
+                    <h2 className={`py-4 text-[1.1rem] ${theme?'bg-[#1a1919]':'bg-[#e9ebee]'} lg:fixed lg:w-full`}>
                         <button className={`${(field==='posts')?'text-[#aa77f0] underline underline-offset-8':''} mr-4`}><span className={`${theme?'text-[#b8b7b7]':'text-[#4b4b4b]'}`} onClick={()=>setField('posts')}>Posts</span></button>
                         <button className={` ${(field==='photos')?'text-[#aa77f0] underline underline-offset-8':''}`}><span className={`${theme?'text-[#b8b7b7]':'text-[#4b4b4b]'}`} onClick={()=>setField('photos')}>Photos</span></button>
                     </h2>

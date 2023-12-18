@@ -7,10 +7,6 @@ import {z} from "zod"
 import { ResetPasswordSchema } from '../../types/type';
 import { zodResolver } from '@hookform/resolvers/zod';
 
-// type LoginFormInput = {
-//     password: string;
-//     confirmpassword:string
-//   };
 
 const ResetPassword = ()=>{
     type ResetParams = z.infer<typeof ResetPasswordSchema>

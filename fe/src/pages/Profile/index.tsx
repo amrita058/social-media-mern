@@ -12,7 +12,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 
 type RegisterParams =  Partial<z.infer<typeof UserRegisterSchema>>
 
-
 const Profile = () => {
   const dispatch = useDispatch()
   const token = localStorage.getItem("token")
@@ -79,7 +78,7 @@ const Profile = () => {
   }
 
     return (
-      <div className="pt-16 text-white min-h-screen flex items-center">
+      <div className="pt-28 sm:pt-16 text-white min-h-screen flex items-center">
         <div className="w-full px-3 sm:px-10 flex">
           <div className={`${theme?' bg-opacity-70':''} shadow-lg shadow-[#aa77f0] w-full rounded-md`}>
             <form onSubmit={handleSubmit(onSubmit,onError)} className='flex flex-col justify-center border-0 rounded-r-xl w-full h-full backdrop-blur-[2px]' encType="multipart/form-data">
@@ -122,7 +121,6 @@ const Profile = () => {
                 <section className="w-full p-5 ">
                 <div className={`flex-1 ${theme?'bg-[#313131] shadow-black':'bg-[#efeeee]'} shadow-2xl rounded-md`}>
                   <div><h2 className={`${theme?'text-[#ffffff] bg-[#202022]':'text-[#4d4d4d] bg-[#d9d9d9]'} py-5 px-3 rounded-t-md`}>Account Details</h2>
-                  {/* <div className="h-[0.8px] bg-[#444444]"></div> */}
                   <div className={`h-[0.8px] ${theme?'bg-[#444343]':'bg-[#d1d0d0]'}`}></div>
                   </div>
                     <div className="p-3 flex flex-col gap-11">

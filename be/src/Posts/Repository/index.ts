@@ -138,7 +138,6 @@ export const getComments = async(postId:string)=>{
                     _id: -1
                     })
 
-        // const comments = ["hithere","always here"]
         return comments
     }
     catch(error){

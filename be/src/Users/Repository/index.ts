@@ -194,7 +194,6 @@ export const getFriendRequest = async(requestid:string,page:number,limit:number)
     }
 }
 
-
 export const getSentRequest = async(userid:string)=>{
     try{
         const id = new ObjectId(userid)
@@ -271,7 +270,6 @@ export const viewProfile = async(userid:string)=>{
     }
 }
 
-
 export const getFriends = async(requestid:string,page:number,limit:number)=>{
     try{
         // console.log("get post repo")
@@ -328,7 +326,7 @@ export const searchPeople = async(name:any)=>{
         })
 
         const filterUsers = users?.filter((user:any)=>{
-            return user.userName.includes(name)
+            return user.userName.toLowerCase().includes(name.toLowerCase())
         })
 
 
@@ -360,8 +358,6 @@ export const getNotification = async(userid:string)=>{
         const filteredNotifications = notifications.filter((notification:any) => 
             !notification.sender._id.equals(notification.receiver)
         );
-
-        // console.log("filtered notifications",filteredNotifications)
 
         return filteredNotifications
     }

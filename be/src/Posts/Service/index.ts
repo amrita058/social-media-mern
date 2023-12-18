@@ -16,6 +16,7 @@ export const uploadPost = async (id:ObjectId,content:string,file:any)=>{
     }
   }catch(e){
     console.log("error in file upload",e)
+    throw e
   }
 }
 
@@ -26,6 +27,7 @@ export const getPost = async(id:string,page:number,limit:number)=>{
  
   }catch(e){
     console.log("error in file upload",e)
+    throw e
   }
 }
 
@@ -36,6 +38,7 @@ export const deletePosts = async(postId:string)=>{
  
   }catch(e){
     console.log("error in file upload",e)
+    throw e
   }
 }
 
@@ -46,6 +49,7 @@ export const postComments = async(postId:string,userId:any,comment:string)=>{
  
   }catch(e){
     console.log("error in file upload",e)
+    throw e
   }
 }
 
@@ -56,6 +60,7 @@ export const getComments = async(postId:string)=>{
  
   }catch(e){
     console.log("error in file upload",e)
+    throw e
   }
 }
 
@@ -66,6 +71,7 @@ export const deleteComments = async(commentId:string)=>{
  
   }catch(e){
     console.log("error in file upload",e)
+    throw e
   }
 }
 
@@ -76,5 +82,6 @@ export const likePost = async(postId:string,userId:any)=>{
  
   }catch(e){
     console.log("error in file upload",e)
+    throw e
   }
 }

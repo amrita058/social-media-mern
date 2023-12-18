@@ -79,7 +79,7 @@ const Navbar = () => {
             <i className={`fa-solid fa-star-and-crescent text-xl -rotate-45`} onClick={handleTheme}></i>
           </div>
           <button className={`${theme?'text-[#555555]':'text-[#757575]'} cursor-pointer`} onClick={()=>{dispatch(changeNotify(!notify));dispatch(changeDrop(false))}}>
-          {(count>0)?<p className='absolute top-4 right-20 bg-red-400 rounded-full text-white text-[10px] px-[4px]'>{count}</p>:<></>}
+          {(count>0)?<p className='absolute top-12 sm:top-4 sm:right-20 bg-red-400 rounded-full text-white text-[10px] px-[4px]'>{count}</p>:<></>}
             <i className="fa-solid fa-bell text-xl"></i>
           </button>
           {/* {notify?<Notifications/>:<></>} */}
